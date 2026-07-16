@@ -198,3 +198,15 @@ package-lock.json
 
 # Live-app smoke test failure screenshot (scripts/smoke_live_app.py)
 smoke_live_app_failure.png
+
+
+# LogMind local runtime files
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Local backup files
+*.bak
+
+# Environment variables
+.env

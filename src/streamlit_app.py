@@ -24,8 +24,8 @@ from voice import VoiceManager
 # The app heavily uses AgentClient to interact with the agent's FastAPI endpoints.
 
 
-APP_TITLE = "Agent Service Toolkit"
-APP_ICON = "🧰"
+APP_TITLE = "LogMind 排障助手"
+APP_ICON = "🧰" 
 USER_ID_COOKIE = "user_id"
 
 
@@ -88,11 +88,11 @@ async def main() -> None:
             port = os.getenv("PORT", 8080)
             agent_url = f"http://{host}:{port}"
         try:
-            with st.spinner("Connecting to agent service..."):
+            with st.spinner("正在连接 Agent 服务..."):
                 st.session_state.agent_client = AgentClient(base_url=agent_url)
         except AgentClientError as e:
-            st.error(f"Error connecting to agent service at {agent_url}: {e}")
-            st.markdown("The service might be booting up. Try again in a few seconds.")
+            st.error(f"连接 Agent 服务失败，服务地址：{agent_url}，错误信息：{e}")
+            st.markdown("服务可能仍在启动中，请等待几秒后重试。")
             st.stop()
     agent_client: AgentClient = st.session_state.agent_client
 
@@ -115,7 +115,7 @@ async def main() -> None:
                     thread_id=thread_id, agent=resume_agent
                 ).messages
             except AgentClientError:
-                st.error("No message history found for this Thread ID.")
+                st.error("当前会话没有找到历史记录，可能是链接中的 thread_id 已失效。请点击“新建对话”重新开始。")
                 messages = []
         st.session_state.messages = messages
         st.session_state.thread_id = thread_id
@@ -126,12 +126,11 @@ async def main() -> None:
     # Config options
     with st.sidebar:
         st.header(f"{APP_ICON} {APP_TITLE}")
+        """
+        面向后端开发与运维排障场景的智能日志分析 Agent 平台。
+        """
 
-        ""
-        "Full toolkit for running an AI agent service built with LangGraph, FastAPI and Streamlit"
-        ""
-
-        if st.button(":material/chat: New Chat", use_container_width=True):
+        if st.button(":material/chat: 新建对话", use_container_width=True):
             st.session_state.messages = []
             st.session_state.thread_id = str(uuid.uuid4())
             # Clear saved audio when starting new chat
@@ -139,23 +138,23 @@ async def main() -> None:
                 del st.session_state.last_audio
             st.rerun()
 
-        with st.popover(":material/settings: Settings", use_container_width=True):
+        with st.popover(":material/settings: 设置", use_container_width=True):
             model_idx = agent_client.info.models.index(agent_client.info.default_model)
-            model = st.selectbox("LLM to use", options=agent_client.info.models, index=model_idx)
+            model = st.selectbox("选择模型", options=agent_client.info.models, index=model_idx)
             agent_list = [a.key for a in agent_client.info.agents]
             agent_idx = agent_list.index(agent_client.info.default_agent)
             # Sync the selection to the ?agent= URL param (dropped when it's the default).
             agent_client.agent = st.selectbox(
-                "Agent to use",
+                "选择 Agent",
                 options=agent_list,
                 index=agent_idx,
                 key="agent",
                 bind="query-params",
             )
-            use_streaming = st.toggle("Stream results", value=True)
+            use_streaming = st.toggle("流失输出", value=True)
             # Audio toggle with callback: clears cached audio when toggled off
             enable_audio = st.toggle(
-                "Enable audio generation",
+                "启用语音生成",
                 value=True,
                 disabled=not voice or not voice.tts,
                 help="Configure VOICE_TTS_PROVIDER in .env to enable"
@@ -170,27 +169,27 @@ async def main() -> None:
             )
 
             # Display user ID (for debugging or user information)
-            st.text_input("User ID (read-only)", value=user_id, disabled=True)
+            st.text_input("用户 ID（只读）", value=user_id, disabled=True)
 
-        @st.dialog("Architecture")
+        @st.dialog("系统架构")
         def architecture_dialog() -> None:
             st.image(
                 "https://github.com/JoshuaC215/agent-service-toolkit/blob/main/media/agent_architecture.png?raw=true"
             )
-            "[View full size on Github](https://github.com/JoshuaC215/agent-service-toolkit/blob/main/media/agent_architecture.png)"
+            "[查看完整架构图](https://github.com/JoshuaC215/agent-service-toolkit/blob/main/media/agent_architecture.png)"
             st.caption(
-                "App hosted on [Streamlit Cloud](https://share.streamlit.io/) with FastAPI service running in [Azure](https://learn.microsoft.com/en-us/azure/app-service/)"
+                "该架构展示了 Streamlit 前端、FastAPI 服务和 LangGraph Agent 之间的调用关系。"
             )
 
-        if st.button(":material/schema: Architecture", use_container_width=True):
+        if st.button(":material/schema: 系统架构", use_container_width=True):
             architecture_dialog()
 
-        with st.popover(":material/policy: Privacy", use_container_width=True):
+        with st.popover(":material/policy: 隐私说明", use_container_width=True):
             st.write(
-                "Prompts, responses and feedback in this app are anonymously recorded and saved to LangSmith for product evaluation and improvement purposes only."
+                 "本地开发环境下，请不要输入真实敏感信息、账号密码、生产环境日志或内部数据。后续正式部署时，需要增加鉴权、日志脱敏和访问控制。"
             )
 
-        @st.dialog("Share/resume chat")
+        @st.dialog("分享/恢复对话")
         def share_chat_dialog() -> None:
             # st.context.url is the browser URL (with query string stripped). Rebuild
             # the params, including the agent so the thread resumes through the right graph.
@@ -205,15 +204,15 @@ async def main() -> None:
                 }
             )
             chat_url = f"{st.context.url}?{query}"
-            st.markdown(f"**Chat URL:**\n```text\n{chat_url}\n```")
-            st.info("Copy the above URL to share or revisit this chat")
+            st.markdown(f"**当前对话链接：**\n```text\n{chat_url}\n```")
+            st.info("复制上面的链接，可以分享或恢复当前对话。")
 
-        if st.button(":material/upload: Share/resume chat", use_container_width=True):
+        if st.button(":material/upload: 分享/恢复对话", use_container_width=True):
             share_chat_dialog()
 
-        "[View the source code](https://github.com/JoshuaC215/agent-service-toolkit)"
+        "[查看项目源码](https://github.com/JoshuaC215/agent-service-toolkit)"
         st.caption(
-            "Made with :material/favorite: by [Joshua](https://www.linkedin.com/in/joshua-k-carroll/) in Oakland"
+            "基于 agent-service-toolkit 二次开发，用于学习 Agent 服务、日志分析和运维排障场景。"
         )
 
     # Draw existing messages
@@ -222,16 +221,15 @@ async def main() -> None:
     if len(messages) == 0:
         match agent_client.agent:
             case "chatbot":
-                WELCOME = "Hello! I'm a simple chatbot. Ask me anything!"
-            case "interrupt-agent":
-                WELCOME = "Hello! I'm an interrupt agent. Tell me your birthday and I will predict your personality!"
+                WELCOME = "你好，我是 LogMind 智能排障助手。你可以粘贴日志或描述系统故障，我会帮你分析可能原因。"
             case "research-assistant":
-                WELCOME = "Hello! I'm an AI-powered research assistant with web search and a calculator. Ask me anything!"
+                WELCOME = """你好，我是 LogMind 智能运维排障助手。
+        你可以输入 Java、Python、MySQL、Redis、Nginx、Docker 等相关报错信息，我会帮你分析故障原因并给出处理建议。"""
             case "rag-assistant":
-                WELCOME = """Hello! I'm an AI-powered Company Policy & HR assistant with access to AcmeTech's Employee Handbook.
-                I can help you find information about benefits, remote work, time-off policies, company values, and more. Ask me anything!"""
+                WELCOME = """你好，我是 LogMind 知识库辅助诊断助手。
+        我可以结合运维知识库、历史故障案例和你提供的日志信息，帮助你分析故障原因、定位问题并生成排查建议。"""
             case _:
-                WELCOME = "Hello! I'm an AI agent. Ask me anything!"
+                WELCOME = "你好，我是智能 Agent 助手。请描述你的问题，我会尽力帮助你分析。"
 
         with st.chat_message("ai"):
             st.write(WELCOME)
@@ -264,7 +262,7 @@ async def main() -> None:
     if voice:
         user_input = voice.get_chat_input()
     else:
-        user_input = st.chat_input()
+        user_input = st.chat_input("请粘贴日志、报错堆栈，或描述你遇到的系统故障...")
 
     if user_input:
         messages.append(ChatMessage(type="human", content=user_input))

@@ -31,12 +31,6 @@ from schema.models import (
 )
 
 
-class DatabaseType(StrEnum):
-    SQLITE = "sqlite"
-    POSTGRES = "postgres"
-    MONGO = "mongo"
-
-
 class LogLevel(StrEnum):
     DEBUG = "DEBUG"
     INFO = "INFO"
@@ -132,30 +126,8 @@ class Settings(BaseSettings):
     LANGFUSE_PUBLIC_KEY: SecretStr | None = None
     LANGFUSE_SECRET_KEY: SecretStr | None = None
 
-    # Database Configuration
-    DATABASE_TYPE: DatabaseType = (
-        DatabaseType.SQLITE
-    )  # Options: DatabaseType.SQLITE or DatabaseType.POSTGRES
+    # LogMind persists checkpoints and diagnosis records locally in SQLite.
     SQLITE_DB_PATH: str = "checkpoints.db"
-
-    # PostgreSQL Configuration
-    POSTGRES_USER: str | None = None
-    POSTGRES_PASSWORD: SecretStr | None = None
-    POSTGRES_HOST: str | None = None
-    POSTGRES_PORT: int | None = None
-    POSTGRES_DB: str | None = None
-    POSTGRES_APPLICATION_NAME: str = "agent-service-toolkit"
-    POSTGRES_MIN_CONNECTIONS_PER_POOL: int = 1
-    POSTGRES_MAX_CONNECTIONS_PER_POOL: int = 1
-
-    # MongoDB Configuration
-    MONGO_HOST: str | None = None
-    MONGO_PORT: int | None = None
-    MONGO_DB: str | None = None
-    MONGO_USER: str | None = None
-    MONGO_PASSWORD: SecretStr | None = None
-    MONGO_AUTH_SOURCE: str | None = None
-    MONGO_TLS: bool = False  # opt-in TLS for MongoDB; set to True for production/Atlas
 
     # Azure OpenAI Settings
     AZURE_OPENAI_API_KEY: SecretStr | None = None

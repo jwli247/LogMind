@@ -10,13 +10,10 @@ from typing import Any
 
 import streamlit as st
 from dotenv import load_dotenv
-from pydantic import ValidationError
 from streamlit.components.v1 import html
 
 from client import AgentClient, AgentClientError
 from schema import ChatHistory, ChatMessage
-from schema.task_data import TaskData, TaskDataStatus
-from voice import VoiceManager
 
 # A Streamlit app for interacting with the langgraph agent via a simple chat interface.
 # The app has three main functions which are all run async:
@@ -751,32 +748,15 @@ def get_chat_value_files(chat_value: Any) -> list[Any]:
     return []
 
 
-def get_chat_value_audio(chat_value: Any) -> Any | None:
-    if hasattr(chat_value, "audio"):
-        return chat_value.audio
-
-    if isinstance(chat_value, dict):
-        return chat_value.get("audio")
-
-    return None
-
-
 def build_logmind_chat_submission(
     *,
     chat_value: Any,
     agent_url: str | None,
-    voice: VoiceManager | None,
 ) -> tuple[str, str] | None:
     if not chat_value:
         return None
 
     text = get_chat_value_text(chat_value)
-    audio = get_chat_value_audio(chat_value)
-    if audio and voice:
-        transcribed_text = voice._transcribe_audio(audio)
-        if transcribed_text:
-            text = "\n\n".join(part for part in (text, transcribed_text) if part)
-
     files = get_chat_value_files(chat_value)
     if not files:
         return (text, text) if text else None
@@ -1070,23 +1050,15 @@ async def main() -> None:
             st.stop()
     agent_client: AgentClient = st.session_state.agent_client
 
-    # Initialize voice manager (once per session)
-    if "voice_manager" not in st.session_state:
-        st.session_state.voice_manager = VoiceManager.from_env()
-    voice = st.session_state.voice_manager
-
     if "thread_id" not in st.session_state:
         thread_id = st.query_params.get("thread_id")
         if not thread_id:
             thread_id = str(uuid.uuid4())
             messages = []
         else:
-            # Read the agent from the URL so history is fetched through the graph that
-            # created the thread.
-            resume_agent = st.query_params.get("agent") or agent_client.agent
             try:
                 messages: ChatHistory = agent_client.get_history(
-                    thread_id=thread_id, agent=resume_agent
+                    thread_id=thread_id, agent=agent_client.agent
                 ).messages
             except AgentClientError:
                 st.error("当前会话没有找到历史记录，可能是链接中的 thread_id 已失效。请点击“新建对话”重新开始。")
@@ -1119,9 +1091,6 @@ async def main() -> None:
         if st.button(":material/chat: 新建对话", type="primary", use_container_width=True):
             st.session_state.messages = []
             st.session_state.thread_id = str(uuid.uuid4())
-            # Clear saved audio when starting new chat
-            if "last_audio" in st.session_state:
-                del st.session_state.last_audio
             st.rerun()
 
         @st.dialog("最近对话")
@@ -1175,7 +1144,6 @@ async def main() -> None:
                         if agent_id:
                             agent_client.agent = agent_id
                             st.query_params["agent"] = agent_id
-                        st.session_state.pop("last_audio", None)
                         st.rerun()
                 st.divider()
 
@@ -1207,11 +1175,7 @@ async def main() -> None:
                 st.error("无法获取当前应用地址，暂时不能生成分享链接。")
                 return
             query = urllib.parse.urlencode(
-                {
-                    "thread_id": st.session_state.thread_id,
-                    "agent": agent_client.agent,
-                    USER_ID_COOKIE: user_id,
-                }
+                {"thread_id": st.session_state.thread_id, USER_ID_COOKIE: user_id}
             )
             chat_url = f"{st.context.url}?{query}"
             st.markdown(f"**当前对话链接：**\n```text\n{chat_url}\n```")
@@ -1266,32 +1230,7 @@ async def main() -> None:
         with st.popover(":material/settings: 设置", use_container_width=True):
             model_idx = agent_client.info.models.index(agent_client.info.default_model)
             model = st.selectbox("选择模型", options=agent_client.info.models, index=model_idx)
-            agent_list = [a.key for a in agent_client.info.agents]
-            agent_idx = agent_list.index(agent_client.info.default_agent)
-            # Sync the selection to the ?agent= URL param (dropped when it's the default).
-            agent_client.agent = st.selectbox(
-                "选择 Agent",
-                options=agent_list,
-                index=agent_idx,
-                key="agent",
-                bind="query-params",
-            )
             use_streaming = st.toggle("流式输出", value=True)
-            # Audio toggle with callback: clears cached audio when toggled off
-            enable_audio = st.toggle(
-                "启用语音生成",
-                value=True,
-                disabled=not voice or not voice.tts,
-                help="在 .env 中配置 VOICE_TTS_PROVIDER 后可启用"
-                if not voice or not voice.tts
-                else None,
-                on_change=lambda: (
-                    st.session_state.pop("last_audio", None)
-                    if not st.session_state.get("enable_audio", True)
-                    else None
-                ),
-                key="enable_audio",
-            )
 
             # Display user ID (for debugging or user information)
             st.text_input("用户 ID（只读）", value=user_id, disabled=True)
@@ -1305,23 +1244,11 @@ async def main() -> None:
     messages: list[ChatMessage] = st.session_state.messages
 
     if len(messages) == 0:
-        match agent_client.agent:
-            case "logmind":
-                WELCOME = """你好，我是 LogMind 智能日志分析与运维排障 Agent。
-你可以粘贴 Spring Boot、MySQL、Redis、Nginx、Docker 等相关日志或异常堆栈，我会帮你提取关键信息、分析可能原因，并给出排查步骤和修复建议。"""
-            case "chatbot":
-                WELCOME = "你好，我是 LogMind 智能排障助手。你可以粘贴日志或描述系统故障，我会帮你分析可能原因。"
-            case "research-assistant":
-                WELCOME = """你好，我是 LogMind 智能运维排障助手。
-        你可以输入 Java、Python、MySQL、Redis、Nginx、Docker 等相关报错信息，我会帮你分析故障原因并给出处理建议。"""
-            case "rag-assistant":
-                WELCOME = """你好，我是 LogMind 知识库辅助诊断助手。
-        我可以结合运维知识库、历史故障案例和你提供的日志信息，帮助你分析故障原因、定位问题并生成排查建议。"""
-            case _:
-                WELCOME = "你好，我是智能 Agent 助手。请描述你的问题，我会尽力帮助你分析。"
-
         with st.chat_message("ai"):
-            st.write(WELCOME)
+            st.write(
+                """你好，我是 LogMind 智能日志分析与运维排障 Agent。
+你可以粘贴 Spring Boot、MySQL、Redis、Nginx、Docker 等相关日志或异常堆栈，我会帮你提取关键信息、分析可能原因，并给出排查步骤和修复建议。"""
+            )
 
     # draw_messages() expects an async iterator over messages
     async def amessage_iter() -> AsyncGenerator[ChatMessage, None]:
@@ -1330,42 +1257,16 @@ async def main() -> None:
 
     await draw_messages(amessage_iter())
 
-    # Render saved audio for the last AI message (if it exists)
-    # This ensures audio persists across st.rerun() calls
-    if (
-        voice
-        and enable_audio
-        and "last_audio" in st.session_state
-        and st.session_state.last_message
-        and len(messages) > 0
-        and messages[-1].type == "ai"
-    ):
-        with st.session_state.last_message:
-            audio_data = st.session_state.last_audio
-            st.audio(audio_data["data"], format=audio_data["format"])
-
     # Generate new message if the user provided new input
-    # Use voice manager if available, otherwise fall back to regular input
-    # REQUIRED: Set VOICE_STT_PROVIDER, VOICE_TTS_PROVIDER, OPENAI_API_KEY
-    # in app .env (NOT service .env) to enable voice features.
-    if agent_client.agent == "logmind":
-        chat_value = st.chat_input(
-            "请粘贴日志、报错堆栈，或描述你遇到的系统故障...",
-            accept_file="multiple",
-            file_type=["log", "txt"],
-            accept_audio=bool(voice and voice.stt),
-        )
-        submission = build_logmind_chat_submission(
-            chat_value=chat_value,
-            agent_url=st.session_state.get("agent_url"),
-            voice=voice,
-        )
-    elif voice:
-        user_input = voice.get_chat_input()
-        submission = (user_input, user_input) if user_input else None
-    else:
-        user_input = st.chat_input("请粘贴日志、报错堆栈，或描述你遇到的系统故障...")
-        submission = (user_input, user_input) if user_input else None
+    chat_value = st.chat_input(
+        "请粘贴日志、报错堆栈，或描述你遇到的系统故障...",
+        accept_file="multiple",
+        file_type=["log", "txt"],
+    )
+    submission = build_logmind_chat_submission(
+        chat_value=chat_value,
+        agent_url=st.session_state.get("agent_url"),
+    )
 
     if submission:
         display_input, agent_input = submission
@@ -1384,19 +1285,6 @@ async def main() -> None:
                     )
                     await draw_messages(stream, is_new=True)
                     thinking_status.update(label="已完成", state="complete")
-                    # Generate TTS audio for streaming response
-                    # Note: draw_messages() stores the final message in st.session_state.messages
-                    # and the container reference in st.session_state.last_message
-                    if voice and enable_audio and st.session_state.messages:
-                        last_msg = st.session_state.messages[-1]
-                        # Only generate audio for AI responses with content
-                        if last_msg.type == "ai" and last_msg.content:
-                            # Use audio_only=True since text was already streamed by draw_messages()
-                            voice.render_message(
-                                last_msg.content,
-                                container=st.session_state.last_message,
-                                audio_only=True,
-                            )
             else:
                 with thinking_status:
                     response = await agent_client.ainvoke(
@@ -1407,12 +1295,8 @@ async def main() -> None:
                     )
                     thinking_status.update(label="已完成", state="complete")
                 messages.append(response)
-                # Render AI response with optional voice
                 with st.chat_message("ai"):
-                    if voice and enable_audio:
-                        voice.render_message(response.content)
-                    else:
-                        render_markdown_with_code_copy(response.content)
+                    render_markdown_with_code_copy(response.content)
             st.rerun()  # Clear stale containers
         except AgentClientError as e:
             st.error(f"生成回复失败：{e}")
@@ -1550,31 +1434,6 @@ async def draw_messages(
                             status.write("输出：")
                             status.write(tool_result.content)
                             status.update(state="complete")
-
-            case "custom":
-                # CustomData example used by the bg-task-agent
-                # See:
-                # - src/agents/utils.py CustomData
-                # - src/agents/bg_task_agent/task.py
-                try:
-                    task_data: TaskData = TaskData.model_validate(msg.custom_data)
-                except ValidationError:
-                    st.error("收到 Agent 返回的异常自定义消息。")
-                    st.write(msg.custom_data)
-                    st.stop()
-
-                if is_new:
-                    st.session_state.messages.append(msg)
-
-                if last_message_type != "task":
-                    last_message_type = "task"
-                    st.session_state.last_message = st.chat_message(
-                        name="task", avatar=":material/manufacturing:"
-                    )
-                    with st.session_state.last_message:
-                        status = TaskDataStatus()
-
-                status.add_and_draw_task_data(task_data)
 
             # In case of an unexpected message type, log an error and stop
             case _:

@@ -36,7 +36,7 @@ def test_app_simple_non_streaming(mock_agent_client):
     """Test the full app - happy path"""
     at = app_test().run()
 
-    WELCOME_START = "你好，我是智能 Agent 助手"
+    WELCOME_START = "你好，我是 LogMind 智能日志分析与运维排障 Agent"
     PROMPT = "Know any jokes?"
     RESPONSE = "Sure! Here's a joke:"
 
@@ -49,7 +49,6 @@ def test_app_simple_non_streaming(mock_agent_client):
 
     at.sidebar.toggle[0].set_value(False)  # Use Streaming = False
     at.chat_input[0].set_value(PROMPT).run()
-    print(at)
     assert at.chat_message[0].avatar == "user"
     assert at.chat_message[0].markdown[0].value == PROMPT
     assert at.chat_message[1].avatar == "assistant"
@@ -229,11 +228,9 @@ def test_app_settings(mock_agent_client):
 
     at.sidebar.toggle[0].set_value(False)  # Use Streaming = False
     assert at.sidebar.selectbox[0].value == "gpt-5-nano"
-    assert mock_agent_client.agent == "test-agent"
+    assert mock_agent_client.agent == "logmind"
     at.sidebar.selectbox[0].set_value("gpt-5-mini")
-    at.sidebar.selectbox[1].set_value("chatbot")
     at.chat_input[0].set_value(PROMPT).run()
-    print(at)
 
     # Basic checks
     assert at.chat_message[0].avatar == "user"
@@ -242,7 +239,7 @@ def test_app_settings(mock_agent_client):
     assert at.chat_message[1].markdown[0].value == RESPONSE
 
     # Check the args match the settings
-    assert mock_agent_client.agent == "chatbot"
+    assert mock_agent_client.agent == "logmind"
     mock_agent_client.ainvoke.assert_called_with(
         message=PROMPT,
         model=OpenAIModelName.GPT_5_MINI,
@@ -266,34 +263,12 @@ def test_app_thread_id_history(mock_agent_client):
     ]
     mock_agent_client.get_history.return_value = ChatHistory(messages=HISTORY)
     at.run()
-    print(at)
     assert at.session_state.thread_id == "1234"
     # No agent in the URL, so history is read through the client's selected agent.
-    mock_agent_client.get_history.assert_called_with(thread_id="1234", agent="test-agent")
+    mock_agent_client.get_history.assert_called_with(thread_id="1234", agent="logmind")
     assert at.chat_message[0].avatar == "user"
     assert at.chat_message[0].markdown[0].value == "What is the weather?"
     assert at.chat_message[1].avatar == "assistant"
-    assert at.chat_message[1].markdown[0].value == "The weather is sunny."
-    assert not at.exception
-
-
-def test_app_resume_with_agent_param(mock_agent_client):
-    """An ?agent= URL param scopes the resumed history to that agent's graph."""
-
-    at = app_test()
-    at.query_params["thread_id"] = "1234"
-    at.query_params["agent"] = "chatbot"
-    HISTORY = [
-        ChatMessage(type="human", content="What is the weather?"),
-        ChatMessage(type="ai", content="The weather is sunny."),
-    ]
-    mock_agent_client.get_history.return_value = ChatHistory(messages=HISTORY)
-    at.run()
-    print(at)
-    assert at.session_state.thread_id == "1234"
-    # History is fetched through the agent named in the URL, not the default.
-    mock_agent_client.get_history.assert_called_with(thread_id="1234", agent="chatbot")
-    assert at.chat_message[0].markdown[0].value == "What is the weather?"
     assert at.chat_message[1].markdown[0].value == "The weather is sunny."
     assert not at.exception
 
@@ -329,7 +304,6 @@ async def test_app_streaming(mock_agent_client):
 
     at.toggle[0].set_value(True)  # Use Streaming = True
     at.chat_input[0].set_value(PROMPT).run()
-    print(at)
 
     assert at.chat_message[0].avatar == "user"
     assert at.chat_message[0].markdown[0].value == PROMPT
@@ -357,7 +331,6 @@ async def test_app_init_error(mock_agent_client):
 
     at.toggle[0].set_value(True)  # Use Streaming = True
     at.chat_input[0].set_value(PROMPT).run()
-    print(at)
 
     assert at.chat_message[0].avatar == "assistant"
     assert at.chat_message[1].avatar == "user"

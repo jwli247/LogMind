@@ -908,7 +908,7 @@ def test_stream_interrupt(test_client, mock_agent) -> None:
 def test_info(test_client, mock_settings) -> None:
     """Test that /info returns the correct service metadata."""
 
-    base_agent = Agent(description="A base agent.", graph_like=None)
+    base_agent = Agent(description="A base agent.", graph=None)
     mock_settings.AUTH_SECRET = None
     mock_settings.DEFAULT_MODEL = OpenAIModelName.GPT_5_NANO
     mock_settings.AVAILABLE_MODELS = {OpenAIModelName.GPT_5_NANO, OpenAIModelName.GPT_5_MINI}

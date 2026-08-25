@@ -190,56 +190,9 @@ uv run pytest -q tests\agents\test_logmind.py tests\agents\test_logmind_classifi
 uv run ruff check src tests
 ```
 
-## 技术取舍
-
-这些取舍是面试里最容易被追问的部分：
-
-- **规则分类器 + LLM**：规则负责端口冲突、OOM、连接失败这类高确定性故障入口，LLM 负责综合分析和生成排查建议。
-- **静态知识库 + 动态历史案例**：`docs/knowledge` 保存稳定 Runbook，SQLite 诊断历史保存运行过程中沉淀的动态经验。
-- **RAG top-k=3**：当前知识库规模不大，3 条可以兼顾上下文覆盖和噪声控制；后续可用 recall@k 对比 k=1、3、5。
-- **Baseline 对比**：离线对比普通 RAG 和 Agent-RAG。普通 RAG 不使用故障类型过滤时，24 条 RAG 样本 Top-3 命中 22 条；Agent-RAG 使用规则分类结果做过滤后命中 24 条。
-- **SQLite**：本地演示和简历项目优先保证可运行、可复盘；生产化可替换为 PostgreSQL 或 MySQL。
-- **Chroma**：适合本地 RAG 原型，部署轻量；生产化可换 Milvus、Qdrant 或云向量库。
-- **Eval 和 trace 优先于堆功能**：项目重点不是工具越多越好，而是能证明诊断链路稳定、可追踪、可回归。
-
-更完整的面试追问回答见 [docs/logmind-interview-qna.md](docs/logmind-interview-qna.md)。
-代码阅读顺序和面试问题总纲见 [docs/logmind-study-and-interview-map.md](docs/logmind-study-and-interview-map.md)。
-
-## 面试演示建议
-
-建议准备 2 到 3 个日志样例：
-
-1. Spring Boot 端口冲突：`Port 8080 was already in use`
-2. MySQL 连接失败：`Access denied for user` 或 `Communications link failure`
-3. JVM OOM：`java.lang.OutOfMemoryError`
-
-演示顺序：
-
-1. 在聊天框粘贴日志或上传 `.log/.txt` 文件。
-2. 展示生成的结构化诊断报告。
-3. 打开最近诊断，展示完整报告、参考知识、相似历史案例和 Agent trace。
-4. 打开质量评估，说明它会检查引用准确性和事实一致性。
-5. 打开诊断统计，展示 Agent 运行观测，包括 trace 覆盖率、质量分、命中率和耗时。
-6. 最后运行 `scripts/evaluate_logmind_cases.py`，展示项目有可回归的 Eval。
-
-如果被追问日志切片、召回率、top-k、延迟、token 成本、bad case 处理，优先参考 [docs/logmind-interview-qna.md](docs/logmind-interview-qna.md)。
-
-## 可以写进简历的表述
-
-> 基于 LangGraph、FastAPI、Streamlit、SQLite 和 Chroma 实现面向运维日志排障的 LogMind Agent，支持日志脱敏、诊断意图识别、规则故障分类、RAG 运维知识检索、历史诊断案例召回、结构化诊断报告生成、Agent trace 记录和质量评估。构建分类评估、RAG 引用准确性、事实一致性和 golden replay 测试集，用于回归验证诊断链路稳定性，并在前端展示诊断历史、参考知识、质量结果和运行观测指标。
-
-可量化版本：
-
-> 构建 80 条本地回归评估样本、40 条公开日志小样本、40 条外部人工标注案例、40 条报告质量评估样本和 24 条 RAG Top-3 召回样本，覆盖端口冲突、连接失败、网关 5xx、超时、资源耗尽、配置错误、权限认证、Kubernetes Pod 异常、容器启动失败、数据库慢查询、磁盘文件系统和 TLS/DNS 网络异常等常见场景；离线评估中诊断入口识别和故障分类通过 160/160，普通 RAG Top-3 命中 22/24，Agent-RAG Top-3 命中 24/24，报告结构完整率、关键证据覆盖率、RAG 引用准确性和事实一致性均为 100%。
-
-真实模型抽样结果：在 30 条外部人工标注案例上，Agent-RAG 报告通过 28/30，故障分类准确率 100.0%，平均质量分 99.7，结构完整率和事实一致性为 100.0%，RAG 引用准确性为 93.3%，端到端 p95 耗时为 27.4s，平均总 Token 为 2170。结果和边界见 [docs/logmind-live-eval-results.md](docs/logmind-live-eval-results.md)。
-
-评估数据来源和边界见 [docs/logmind-eval-datasets.md](docs/logmind-eval-datasets.md)。公开日志和外部标注样本用于补充验证，不等同于大规模公开 benchmark。
-Baseline 对比见 [docs/logmind-baseline-comparison.md](docs/logmind-baseline-comparison.md)。
-
 ## 当前边界和后续优化
 
-当前版本适合作为简历和面试演示项目，但还不是完整生产级 Agent 平台。主要边界：
+当前版本仍处于本地单机验证阶段，距离完整生产级 Agent 平台还有差距。主要边界：
 
 - 相似历史案例目前按故障类型和时间召回，后续可升级为 embedding 语义相似检索。
 - 上传日志当前按一次输入整体预处理，还没有完整的时间窗口、trace_id 或异常堆栈级日志切片。

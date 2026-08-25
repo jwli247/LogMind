@@ -1,0 +1,266 @@
+[
+  {
+    "id": "rag_port_conflict_1",
+    "name": "端口冲突排查手册召回样本 1",
+    "query": "APPLICATION FAILED TO START. Port 8080 was already in use.",
+    "fault_type": "port_conflict",
+    "expected_knowledge_titles": [
+      "端口冲突排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_port_conflict_2",
+    "name": "端口冲突排查手册召回样本 2",
+    "query": "Tomcat failed to start: Address already in use.",
+    "fault_type": "port_conflict",
+    "expected_knowledge_titles": [
+      "端口冲突排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_connection_failure_1",
+    "name": "连接失败排查手册召回样本 1",
+    "query": "Communications link failure. Connection refused when connecting to MySQL.",
+    "fault_type": "connection_failure",
+    "expected_knowledge_titles": [
+      "连接失败排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_connection_failure_2",
+    "name": "连接失败排查手册召回样本 2",
+    "query": "Redis connection failed: connection refused to 10.0.0.15:6379.",
+    "fault_type": "connection_failure",
+    "expected_knowledge_titles": [
+      "连接失败排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_gateway_5xx_1",
+    "name": "网关 5xx 错误排查手册召回样本 1",
+    "query": "Nginx returned 502 Bad Gateway from upstream.",
+    "fault_type": "gateway_5xx",
+    "expected_knowledge_titles": [
+      "网关 5xx 错误排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_gateway_5xx_2",
+    "name": "网关 5xx 错误排查手册召回样本 2",
+    "query": "Nginx upstream timed out, request returned 504 gateway timeout.",
+    "fault_type": "gateway_5xx",
+    "expected_knowledge_titles": [
+      "网关 5xx 错误排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_timeout_1",
+    "name": "超时问题排查手册召回样本 1",
+    "query": "Read timed out after 30000ms while calling payment service.",
+    "fault_type": "timeout",
+    "expected_knowledge_titles": [
+      "超时问题排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_timeout_2",
+    "name": "超时问题排查手册召回样本 2",
+    "query": "connect timed out while opening socket to inventory service.",
+    "fault_type": "timeout",
+    "expected_knowledge_titles": [
+      "超时问题排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_resource_exhaustion_1",
+    "name": "资源耗尽排查手册召回样本 1",
+    "query": "java.lang.OutOfMemoryError: Java heap space.",
+    "fault_type": "resource_exhaustion",
+    "expected_knowledge_titles": [
+      "资源耗尽排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_resource_exhaustion_2",
+    "name": "资源耗尽排查手册召回样本 2",
+    "query": "too many open files while accepting new socket connection.",
+    "fault_type": "resource_exhaustion",
+    "expected_knowledge_titles": [
+      "资源耗尽排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_configuration_error_1",
+    "name": "配置错误排查手册召回样本 1",
+    "query": "Failed to bind properties under spring.datasource.",
+    "fault_type": "configuration_error",
+    "expected_knowledge_titles": [
+      "配置错误排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_configuration_error_2",
+    "name": "配置错误排查手册召回样本 2",
+    "query": "Could not resolve placeholder DB_HOST.",
+    "fault_type": "configuration_error",
+    "expected_knowledge_titles": [
+      "配置错误排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_permission_and_auth_1",
+    "name": "权限与认证失败排查手册召回样本 1",
+    "query": "Access denied for user app_user.",
+    "fault_type": "permission_and_auth",
+    "expected_knowledge_titles": [
+      "权限与认证失败排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_permission_and_auth_2",
+    "name": "权限与认证失败排查手册召回样本 2",
+    "query": "HTTP 401 Unauthorized and 403 Forbidden when calling admin API.",
+    "fault_type": "permission_and_auth",
+    "expected_knowledge_titles": [
+      "权限与认证失败排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_kubernetes_pod_failure_1",
+    "name": "Kubernetes Pod 异常排查手册召回样本 1",
+    "query": "Pod is in CrashLoopBackOff.",
+    "fault_type": "kubernetes_pod_failure",
+    "expected_knowledge_titles": [
+      "Kubernetes Pod 异常排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_kubernetes_pod_failure_2",
+    "name": "Kubernetes Pod 异常排查手册召回样本 2",
+    "query": "Pod failed to start: ImagePullBackOff while pulling image.",
+    "fault_type": "kubernetes_pod_failure",
+    "expected_knowledge_titles": [
+      "Kubernetes Pod 异常排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_container_startup_failure_1",
+    "name": "容器启动失败排查手册召回样本 1",
+    "query": "Docker container exited with code 137.",
+    "fault_type": "container_startup_failure",
+    "expected_knowledge_titles": [
+      "容器启动失败排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_container_startup_failure_2",
+    "name": "容器启动失败排查手册召回样本 2",
+    "query": "Container startup failed because entrypoint script returned error.",
+    "fault_type": "container_startup_failure",
+    "expected_knowledge_titles": [
+      "容器启动失败排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_database_slow_query_1",
+    "name": "数据库慢查询排查手册召回样本 1",
+    "query": "Slow query detected. Full table scan happened on order table.",
+    "fault_type": "database_slow_query",
+    "expected_knowledge_titles": [
+      "数据库慢查询排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_database_slow_query_2",
+    "name": "数据库慢查询排查手册召回样本 2",
+    "query": "SQL query took 18.5s rows_examined=1200000.",
+    "fault_type": "database_slow_query",
+    "expected_knowledge_titles": [
+      "数据库慢查询排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_disk_and_filesystem_1",
+    "name": "磁盘与文件系统排查手册召回样本 1",
+    "query": "No space left on device. Application failed to write logs.",
+    "fault_type": "disk_and_filesystem",
+    "expected_knowledge_titles": [
+      "磁盘与文件系统排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_disk_and_filesystem_2",
+    "name": "磁盘与文件系统排查手册召回样本 2",
+    "query": "Read-only file system prevented database from writing data files.",
+    "fault_type": "disk_and_filesystem",
+    "expected_knowledge_titles": [
+      "磁盘与文件系统排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_tls_dns_network_1",
+    "name": "TLS、DNS 与网络排查手册召回样本 1",
+    "query": "SSL handshake failed. certificate verify failed.",
+    "fault_type": "tls_dns_network",
+    "expected_knowledge_titles": [
+      "TLS、DNS 与网络排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  },
+  {
+    "id": "rag_tls_dns_network_2",
+    "name": "TLS、DNS 与网络排查手册召回样本 2",
+    "query": "DNS lookup failed for service payment: name or service not known.",
+    "fault_type": "tls_dns_network",
+    "expected_knowledge_titles": [
+      "TLS、DNS 与网络排查手册"
+    ],
+    "k": 3,
+    "min_hits": 1
+  }
+]

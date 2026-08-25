@@ -1,0 +1,522 @@
+[
+  {
+    "id": "public_apache_permission_denied",
+    "name": "Apache 权限拒绝公开日志样本",
+    "dataset": "LogHub Apache",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Apache",
+    "annotation_note": "基于 LogHub Apache 公开日志风格脱敏标注。",
+    "input_text": "ERROR Permission denied: access to /admin denied",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Permission denied"
+    ]
+  },
+  {
+    "id": "public_apache_file_missing",
+    "name": "Apache 文件缺失公开日志样本",
+    "dataset": "LogHub Apache",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Apache",
+    "annotation_note": "基于 LogHub Apache 公开日志风格脱敏标注。",
+    "input_text": "ERROR File does not exist: /var/www/html/favicon.ico",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "File does not exist"
+    ]
+  },
+  {
+    "id": "public_apache_client_denied",
+    "name": "Apache 客户端访问拒绝公开日志样本",
+    "dataset": "LogHub Apache",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Apache",
+    "annotation_note": "基于 LogHub Apache 公开日志风格脱敏标注。",
+    "input_text": "ERROR client denied by server configuration: /srv/www/private",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "denied"
+    ]
+  },
+  {
+    "id": "public_apache_invalid_method",
+    "name": "Apache 非法请求公开日志样本",
+    "dataset": "LogHub Apache",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Apache",
+    "annotation_note": "基于 LogHub Apache 公开日志风格脱敏标注。",
+    "input_text": "ERROR Invalid method in request BAD / HTTP/1.1",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Invalid method"
+    ]
+  },
+  {
+    "id": "public_openssh_failed_password",
+    "name": "OpenSSH 登录失败公开日志样本",
+    "dataset": "LogHub OpenSSH",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenSSH",
+    "annotation_note": "基于 LogHub OpenSSH 公开日志风格脱敏标注。",
+    "input_text": "ERROR Failed password for invalid user admin from 10.0.0.8 port 55231 ssh2",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Failed password"
+    ]
+  },
+  {
+    "id": "public_openssh_connection_closed",
+    "name": "OpenSSH 连接关闭公开日志样本",
+    "dataset": "LogHub OpenSSH",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenSSH",
+    "annotation_note": "基于 LogHub OpenSSH 公开日志风格脱敏标注。",
+    "input_text": "ERROR Connection closed by authenticating user app 10.0.0.8 port 55231",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Connection closed"
+    ]
+  },
+  {
+    "id": "public_openssh_auth_failure",
+    "name": "OpenSSH 认证失败公开日志样本",
+    "dataset": "LogHub OpenSSH",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenSSH",
+    "annotation_note": "基于 LogHub OpenSSH 公开日志风格脱敏标注。",
+    "input_text": "ERROR Authentication failure for illegal user test from 10.0.0.9",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Authentication failure"
+    ]
+  },
+  {
+    "id": "public_openssh_refused_connect",
+    "name": "OpenSSH 连接拒绝公开日志样本",
+    "dataset": "LogHub OpenSSH",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenSSH",
+    "annotation_note": "基于 LogHub OpenSSH 公开日志风格脱敏标注。",
+    "input_text": "ERROR connect to 10.0.0.10 port 22: Connection refused",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Connection refused"
+    ]
+  },
+  {
+    "id": "public_hdfs_connection_refused",
+    "name": "HDFS 连接拒绝公开日志样本",
+    "dataset": "LogHub HDFS",
+    "source_url": "https://github.com/logpai/loghub/tree/master/HDFS",
+    "annotation_note": "基于 LogHub HDFS 公开日志风格脱敏标注。",
+    "input_text": "ERROR Retrying connect to server datanode:50010 because connection refused",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "connection refused"
+    ]
+  },
+  {
+    "id": "public_hdfs_io_exception",
+    "name": "HDFS IO 异常公开日志样本",
+    "dataset": "LogHub HDFS",
+    "source_url": "https://github.com/logpai/loghub/tree/master/HDFS",
+    "annotation_note": "基于 LogHub HDFS 公开日志风格脱敏标注。",
+    "input_text": "ERROR DataStreamer Exception java.io.IOException: Broken pipe",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "IOException"
+    ]
+  },
+  {
+    "id": "public_hdfs_timeout",
+    "name": "HDFS 超时公开日志样本",
+    "dataset": "LogHub HDFS",
+    "source_url": "https://github.com/logpai/loghub/tree/master/HDFS",
+    "annotation_note": "基于 LogHub HDFS 公开日志风格脱敏标注。",
+    "input_text": "ERROR Call to namenode timed out after 60000ms",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "timed out"
+    ]
+  },
+  {
+    "id": "public_hdfs_disk_full",
+    "name": "HDFS 磁盘空间公开日志样本",
+    "dataset": "LogHub HDFS",
+    "source_url": "https://github.com/logpai/loghub/tree/master/HDFS",
+    "annotation_note": "基于 LogHub HDFS 公开日志风格脱敏标注。",
+    "input_text": "ERROR IOException while writing block: No space left on device",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "No space left on device"
+    ]
+  },
+  {
+    "id": "public_openstack_connection_refused",
+    "name": "OpenStack 连接拒绝公开日志样本",
+    "dataset": "LogHub OpenStack",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenStack",
+    "annotation_note": "基于 LogHub OpenStack 公开日志风格脱敏标注。",
+    "input_text": "ERROR Connection refused while connecting to libvirt service",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Connection refused"
+    ]
+  },
+  {
+    "id": "public_openstack_instance_failed",
+    "name": "OpenStack 实例启动失败公开日志样本",
+    "dataset": "LogHub OpenStack",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenStack",
+    "annotation_note": "基于 LogHub OpenStack 公开日志风格脱敏标注。",
+    "input_text": "ERROR Instance failed to spawn: container exited unexpectedly",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "container exited"
+    ]
+  },
+  {
+    "id": "public_openstack_unauthorized",
+    "name": "OpenStack 未授权公开日志样本",
+    "dataset": "LogHub OpenStack",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenStack",
+    "annotation_note": "基于 LogHub OpenStack 公开日志风格脱敏标注。",
+    "input_text": "ERROR Unauthorized: the request requires authentication",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Unauthorized"
+    ]
+  },
+  {
+    "id": "public_openstack_timeout",
+    "name": "OpenStack 服务超时公开日志样本",
+    "dataset": "LogHub OpenStack",
+    "source_url": "https://github.com/logpai/loghub/tree/master/OpenStack",
+    "annotation_note": "基于 LogHub OpenStack 公开日志风格脱敏标注。",
+    "input_text": "ERROR Timeout while waiting on RPC response from compute service",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Timeout"
+    ]
+  },
+  {
+    "id": "public_zookeeper_session_timeout",
+    "name": "ZooKeeper 会话超时公开日志样本",
+    "dataset": "LogHub ZooKeeper",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Zookeeper",
+    "annotation_note": "基于 LogHub ZooKeeper 公开日志风格脱敏标注。",
+    "input_text": "ERROR Client session timed out, have not heard from server in 30000ms",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "session timed out"
+    ]
+  },
+  {
+    "id": "public_zookeeper_connection_loss",
+    "name": "ZooKeeper 连接丢失公开日志样本",
+    "dataset": "LogHub ZooKeeper",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Zookeeper",
+    "annotation_note": "基于 LogHub ZooKeeper 公开日志风格脱敏标注。",
+    "input_text": "ERROR Connection refused to server zookeeper:2181",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Connection refused"
+    ]
+  },
+  {
+    "id": "public_zookeeper_auth_failed",
+    "name": "ZooKeeper 认证失败公开日志样本",
+    "dataset": "LogHub ZooKeeper",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Zookeeper",
+    "annotation_note": "基于 LogHub ZooKeeper 公开日志风格脱敏标注。",
+    "input_text": "ERROR Authentication failed for session",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Authentication failed"
+    ]
+  },
+  {
+    "id": "public_zookeeper_unknown_exception",
+    "name": "ZooKeeper 通用异常公开日志样本",
+    "dataset": "LogHub ZooKeeper",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Zookeeper",
+    "annotation_note": "基于 LogHub ZooKeeper 公开日志风格脱敏标注。",
+    "input_text": "ERROR Unexpected exception while processing request",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Unexpected exception"
+    ]
+  },
+  {
+    "id": "public_bgl_io_error",
+    "name": "BGL 系统 IO 错误公开日志样本",
+    "dataset": "LogHub BGL",
+    "source_url": "https://github.com/logpai/loghub/tree/master/BGL",
+    "annotation_note": "基于 LogHub BGL 公开日志风格脱敏标注。",
+    "input_text": "ERROR I/O error detected on device during filesystem operation",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "I/O error"
+    ]
+  },
+  {
+    "id": "public_bgl_memory_oom",
+    "name": "BGL 内存不足公开日志样本",
+    "dataset": "LogHub BGL",
+    "source_url": "https://github.com/logpai/loghub/tree/master/BGL",
+    "annotation_note": "基于 LogHub BGL 公开日志风格脱敏标注。",
+    "input_text": "ERROR Out of memory: Kill process 23891 java score 987",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Out of memory"
+    ]
+  },
+  {
+    "id": "public_bgl_filesystem_readonly",
+    "name": "BGL 文件系统只读公开日志样本",
+    "dataset": "LogHub BGL",
+    "source_url": "https://github.com/logpai/loghub/tree/master/BGL",
+    "annotation_note": "基于 LogHub BGL 公开日志风格脱敏标注。",
+    "input_text": "ERROR Remounting filesystem read-only after journal failure",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "read-only"
+    ]
+  },
+  {
+    "id": "public_bgl_connection_timeout",
+    "name": "BGL 网络超时公开日志样本",
+    "dataset": "LogHub BGL",
+    "source_url": "https://github.com/logpai/loghub/tree/master/BGL",
+    "annotation_note": "基于 LogHub BGL 公开日志风格脱敏标注。",
+    "input_text": "ERROR connection timed out while sending heartbeat to management node",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "connection timed out"
+    ]
+  },
+  {
+    "id": "public_hadoop_bind_error",
+    "name": "Hadoop 端口绑定公开日志样本",
+    "dataset": "LogHub Hadoop",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Hadoop",
+    "annotation_note": "基于 LogHub Hadoop 公开日志风格脱敏标注。",
+    "input_text": "ERROR java.net.BindException: Address already in use",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Address already in use"
+    ]
+  },
+  {
+    "id": "public_hadoop_config_missing",
+    "name": "Hadoop 配置缺失公开日志样本",
+    "dataset": "LogHub Hadoop",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Hadoop",
+    "annotation_note": "基于 LogHub Hadoop 公开日志风格脱敏标注。",
+    "input_text": "ERROR Could not resolve placeholder HADOOP_HOME",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Could not resolve placeholder"
+    ]
+  },
+  {
+    "id": "public_hadoop_permission_denied",
+    "name": "Hadoop 权限拒绝公开日志样本",
+    "dataset": "LogHub Hadoop",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Hadoop",
+    "annotation_note": "基于 LogHub Hadoop 公开日志风格脱敏标注。",
+    "input_text": "ERROR Permission denied: user app cannot write /warehouse",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Permission denied"
+    ]
+  },
+  {
+    "id": "public_hadoop_slow_query_boundary",
+    "name": "Hadoop 慢任务公开日志样本",
+    "dataset": "LogHub Hadoop",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Hadoop",
+    "annotation_note": "基于 LogHub Hadoop 公开日志风格脱敏标注。",
+    "input_text": "ERROR slow query stage took 18.5s and rows_examined=1200000",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "slow query"
+    ]
+  },
+  {
+    "id": "public_spark_executor_lost",
+    "name": "Spark Executor 退出公开日志样本",
+    "dataset": "LogHub Spark",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Spark",
+    "annotation_note": "基于 LogHub Spark 公开日志风格脱敏标注。",
+    "input_text": "ERROR Lost executor because container exited with code 137",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "container exited"
+    ]
+  },
+  {
+    "id": "public_spark_oom",
+    "name": "Spark OOM公开日志样本",
+    "dataset": "LogHub Spark",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Spark",
+    "annotation_note": "基于 LogHub Spark 公开日志风格脱敏标注。",
+    "input_text": "ERROR java.lang.OutOfMemoryError: Java heap space while running task",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "OutOfMemoryError"
+    ]
+  },
+  {
+    "id": "public_spark_fetch_timeout",
+    "name": "Spark 拉取超时公开日志样本",
+    "dataset": "LogHub Spark",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Spark",
+    "annotation_note": "基于 LogHub Spark 公开日志风格脱敏标注。",
+    "input_text": "ERROR request timeout while fetching shuffle blocks",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "request timeout"
+    ]
+  },
+  {
+    "id": "public_spark_connection_refused",
+    "name": "Spark 连接拒绝公开日志样本",
+    "dataset": "LogHub Spark",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Spark",
+    "annotation_note": "基于 LogHub Spark 公开日志风格脱敏标注。",
+    "input_text": "ERROR Connection refused when connecting to executor backend",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Connection refused"
+    ]
+  },
+  {
+    "id": "public_linux_disk_full",
+    "name": "Linux 磁盘满公开日志样本",
+    "dataset": "LogHub Linux",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Linux",
+    "annotation_note": "基于 LogHub Linux 公开日志风格脱敏标注。",
+    "input_text": "ERROR No space left on device while writing journal",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "No space left on device"
+    ]
+  },
+  {
+    "id": "public_linux_tls_handshake",
+    "name": "Linux TLS 握手失败公开日志样本",
+    "dataset": "LogHub Linux",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Linux",
+    "annotation_note": "基于 LogHub Linux 公开日志风格脱敏标注。",
+    "input_text": "ERROR tls handshake failed: certificate verify failed",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "tls handshake"
+    ]
+  },
+  {
+    "id": "public_linux_dns_unknown_host",
+    "name": "Linux DNS 解析失败公开日志样本",
+    "dataset": "LogHub Linux",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Linux",
+    "annotation_note": "基于 LogHub Linux 公开日志风格脱敏标注。",
+    "input_text": "ERROR dns lookup failed for api.internal: name or service not known",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "dns lookup failed"
+    ]
+  },
+  {
+    "id": "public_linux_too_many_files",
+    "name": "Linux 文件句柄耗尽公开日志样本",
+    "dataset": "LogHub Linux",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Linux",
+    "annotation_note": "基于 LogHub Linux 公开日志风格脱敏标注。",
+    "input_text": "ERROR too many open files while accepting new connection",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "too many open files"
+    ]
+  },
+  {
+    "id": "public_thunderbird_timeout",
+    "name": "Thunderbird 超时公开日志样本",
+    "dataset": "LogHub Thunderbird",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Thunderbird",
+    "annotation_note": "基于 LogHub Thunderbird 公开日志风格脱敏标注。",
+    "input_text": "ERROR read timed out while checking backend health",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "read timed out"
+    ]
+  },
+  {
+    "id": "public_thunderbird_gateway",
+    "name": "Thunderbird 网关错误公开日志样本",
+    "dataset": "LogHub Thunderbird",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Thunderbird",
+    "annotation_note": "基于 LogHub Thunderbird 公开日志风格脱敏标注。",
+    "input_text": "ERROR 502 bad gateway from upstream service",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "502 bad gateway"
+    ]
+  },
+  {
+    "id": "public_thunderbird_config_error",
+    "name": "Thunderbird 配置错误公开日志样本",
+    "dataset": "LogHub Thunderbird",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Thunderbird",
+    "annotation_note": "基于 LogHub Thunderbird 公开日志风格脱敏标注。",
+    "input_text": "ERROR failed to bind properties under service.mail",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "failed to bind properties"
+    ]
+  },
+  {
+    "id": "public_thunderbird_unknown_error",
+    "name": "Thunderbird 通用错误公开日志样本",
+    "dataset": "LogHub Thunderbird",
+    "source_url": "https://github.com/logpai/loghub/tree/master/Thunderbird",
+    "annotation_note": "基于 LogHub Thunderbird 公开日志风格脱敏标注。",
+    "input_text": "ERROR unexpected error while rotating background worker",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "unexpected error"
+    ]
+  }
+]

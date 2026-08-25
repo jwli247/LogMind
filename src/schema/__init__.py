@@ -1,11 +1,27 @@
+from schema.diagnosis import (
+    AgentObservabilitySummary,
+    AgentTraceStep,
+    AgentTraceStepStats,
+    DiagnosisDailyCount,
+    DiagnosisQualityEvaluation,
+    DiagnosisRecord,
+    DiagnosisReport,
+    DiagnosisStats,
+    FaultType,
+    KnowledgeRef,
+    Severity,
+    SimilarIncidentRef,
+)
 from schema.models import AllModelEnum
 from schema.schema import (
     AgentInfo,
     ChatHistory,
     ChatHistoryInput,
     ChatMessage,
+    ChatThreadSummary,
     Feedback,
     FeedbackResponse,
+    LogFilePreview,
     ServiceMetadata,
     StreamInput,
     UserInput,
@@ -13,6 +29,9 @@ from schema.schema import (
 
 __all__ = [
     "AgentInfo",
+    "AgentObservabilitySummary",
+    "AgentTraceStep",
+    "AgentTraceStepStats",
     "AllModelEnum",
     "UserInput",
     "ChatMessage",
@@ -22,4 +41,15 @@ __all__ = [
     "FeedbackResponse",
     "ChatHistoryInput",
     "ChatHistory",
+    "ChatThreadSummary",
+    "DiagnosisReport",
+    "DiagnosisQualityEvaluation",
+    "DiagnosisRecord",
+    "DiagnosisDailyCount",
+    "DiagnosisStats",
+    "FaultType",
+    "KnowledgeRef",
+    "LogFilePreview",
+    "Severity",
+    "SimilarIncidentRef",
 ]

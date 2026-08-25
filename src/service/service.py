@@ -7,8 +7,8 @@ from contextlib import asynccontextmanager
 from typing import Annotated, Any
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, status
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, Depends, FastAPI, File, HTTPException, Query, UploadFile, status
+from fastapi.responses import Response, StreamingResponse
 from fastapi.routing import APIRoute
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from langchain_core._api import LangChainBetaWarning
@@ -24,13 +24,24 @@ from langsmith import uuid7
 
 from agents import DEFAULT_AGENT, AgentGraph, get_agent, get_all_agent_info, load_agent
 from core import settings
+from core.agent_observability import build_agent_observability_summary
+from core.chat_store import list_chat_threads, upsert_chat_thread
+from core.diagnosis_export import build_diagnosis_markdown_export, diagnosis_export_filename
+from core.diagnosis_store import get_diagnosis_record, get_diagnosis_stats, list_diagnosis_records
+from core.log_file import LogFileValidationError, prepare_log_file_preview
 from memory import initialize_database, initialize_store
 from schema import (
+    AgentObservabilitySummary,
     ChatHistory,
     ChatHistoryInput,
     ChatMessage,
+    ChatThreadSummary,
+    DiagnosisRecord,
+    DiagnosisStats,
+    FaultType,
     Feedback,
     FeedbackResponse,
+    LogFilePreview,
     ServiceMetadata,
     StreamInput,
     UserInput,
@@ -124,11 +135,112 @@ async def info() -> ServiceMetadata:
         default_model=settings.DEFAULT_MODEL,
     )
 
+@router.get("/diagnosis/history")
+async def diagnosis_history(
+    limit: int = 20,
+    fault_type: FaultType | None = None,
+    thread_id: str | None = None,
+    user_id: str | None = None,
+) -> list[DiagnosisRecord]:
+    return await list_diagnosis_records(
+        limit=limit,
+        fault_type=fault_type,
+        thread_id=thread_id,
+        user_id=user_id,
+    )
 
-async def _handle_input(user_input: UserInput, agent: AgentGraph) -> tuple[dict[str, Any], UUID]:
+
+@router.get("/diagnosis/stats")
+async def diagnosis_stats(
+    days: int = Query(default=7, ge=1, le=365),
+    thread_id: str | None = None,
+    user_id: str | None = None,
+) -> DiagnosisStats:
+    return await get_diagnosis_stats(
+        days=days,
+        thread_id=thread_id,
+        user_id=user_id,
+    )
+
+
+@router.get("/diagnosis/observability")
+async def diagnosis_observability(
+    limit: int = Query(default=100, ge=1, le=500),
+    fault_type: FaultType | None = None,
+    thread_id: str | None = None,
+    user_id: str | None = None,
+) -> AgentObservabilitySummary:
+    records = await list_diagnosis_records(
+        limit=limit,
+        fault_type=fault_type,
+        thread_id=thread_id,
+        user_id=user_id,
+    )
+    return build_agent_observability_summary(records)
+
+
+@router.post("/diagnosis/log-file/preview")
+async def diagnosis_log_file_preview(
+    file: UploadFile = File(...),
+) -> LogFilePreview:
+    try:
+        content_bytes = await file.read()
+        return prepare_log_file_preview(
+            filename=file.filename or "",
+            content_bytes=content_bytes,
+        )
+    except LogFileValidationError as e:
+        raise HTTPException(status_code=e.status_code, detail=str(e)) from e
+
+
+@router.get("/diagnosis/history/{record_id}/export")
+async def diagnosis_history_export(record_id: str, user_id: str | None = None) -> Response:
+    record = await get_user_scoped_diagnosis_record(record_id, user_id=user_id)
+
+    filename = diagnosis_export_filename(record)
+    return Response(
+        content=build_diagnosis_markdown_export(record),
+        media_type="text/markdown; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.get("/diagnosis/history/{record_id}")
+async def diagnosis_history_detail(record_id: str, user_id: str | None = None) -> DiagnosisRecord:
+    return await get_user_scoped_diagnosis_record(record_id, user_id=user_id)
+
+
+async def get_user_scoped_diagnosis_record(
+    record_id: str,
+    *,
+    user_id: str | None = None,
+) -> DiagnosisRecord:
+    record = await get_diagnosis_record(record_id)
+    if record is None or (user_id is not None and record.user_id != user_id):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Diagnosis not found")
+
+    return record
+
+
+@router.get("/chat/threads")
+async def chat_threads(
+    limit: int = Query(default=20, ge=1, le=100),
+    user_id: str | None = None,
+    agent_id: str | None = None,
+) -> list[ChatThreadSummary]:
+    return await list_chat_threads(
+        limit=limit,
+        user_id=user_id,
+        agent_id=agent_id,
+    )
+
+
+async def _handle_input(
+    user_input: UserInput, agent: AgentGraph
+) -> tuple[dict[str, Any], UUID, str, str]:
     """
     Parse user input and handle any required interrupt resumption.
-    Returns kwargs for agent invocation and the run_id.
+    Returns kwargs for agent invocation, run_id, thread_id, and user_id.
     """
     run_id = uuid7()
     thread_id = user_input.thread_id or str(uuid4())
@@ -179,7 +291,7 @@ async def _handle_input(user_input: UserInput, agent: AgentGraph) -> tuple[dict[
         "config": config,
     }
 
-    return kwargs, run_id
+    return kwargs, run_id, thread_id, user_id
 
 
 @router.post("/{agent_id}/invoke", operation_id="invoke_with_agent_id")
@@ -199,7 +311,13 @@ async def invoke(user_input: UserInput, agent_id: str = DEFAULT_AGENT) -> ChatMe
     # you'd want to include it. You could update the API to return a list of ChatMessages
     # in that case.
     agent: AgentGraph = get_agent(agent_id)
-    kwargs, run_id = await _handle_input(user_input, agent)
+    kwargs, run_id, thread_id, user_id = await _handle_input(user_input, agent)
+    await upsert_chat_thread(
+        thread_id=thread_id,
+        user_id=user_id,
+        agent_id=agent_id,
+        message=user_input.message,
+    )
 
     try:
         response_events: list[tuple[str, Any]] = await agent.ainvoke(**kwargs, stream_mode=["updates", "values"])  # type: ignore # fmt: skip
@@ -232,7 +350,13 @@ async def message_generator(
     This is the workhorse method for the /stream endpoint.
     """
     agent: AgentGraph = get_agent(agent_id)
-    kwargs, run_id = await _handle_input(user_input, agent)
+    kwargs, run_id, thread_id, user_id = await _handle_input(user_input, agent)
+    await upsert_chat_thread(
+        thread_id=thread_id,
+        user_id=user_id,
+        agent_id=agent_id,
+        message=user_input.message,
+    )
 
     try:
         # Process streamed events from the graph and yield messages over the SSE stream.

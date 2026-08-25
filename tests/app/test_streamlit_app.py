@@ -1,19 +1,42 @@
 from collections.abc import AsyncGenerator
+from pathlib import Path
 from unittest.mock import AsyncMock, Mock
 
 import pytest
+from httpx import Request, Response
 from streamlit.testing.v1 import AppTest
 
 from client import AgentClientError
 from schema import ChatHistory, ChatMessage
 from schema.models import OpenAIModelName
+from streamlit_app import (
+    fetch_agent_observability,
+    fetch_diagnosis_stats,
+    fetch_recent_chat_threads,
+    fetch_recent_diagnoses,
+    get_auth_headers,
+    preview_log_file,
+)
+
+APP_PATH = "../../src/streamlit_app.py"
+
+
+def app_test() -> AppTest:
+    return AppTest.from_file(APP_PATH, default_timeout=10)
+
+
+@pytest.fixture(autouse=True)
+def stable_streamlit_home(monkeypatch, tmp_path):
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv("USERPROFILE", str(tmp_path))
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
 
 
 def test_app_simple_non_streaming(mock_agent_client):
     """Test the full app - happy path"""
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
 
-    WELCOME_START = "Hello! I'm an AI agent. Ask me anything!"
+    WELCOME_START = "你好，我是智能 Agent 助手"
     PROMPT = "Know any jokes?"
     RESPONSE = "Sure! Here's a joke:"
 
@@ -34,9 +57,166 @@ def test_app_simple_non_streaming(mock_agent_client):
     assert not at.exception
 
 
+def test_fetch_recent_diagnoses_scopes_by_user(monkeypatch):
+    request_params = {}
+    request_headers = {}
+
+    def fake_get(url, *, params, headers, timeout):
+        request_params.update(params)
+        request_headers.update(headers)
+        return Response(200, json=[], request=Request("GET", url))
+
+    monkeypatch.setenv("AUTH_SECRET", "secret-1")
+    monkeypatch.setattr("httpx.get", fake_get)
+
+    records = fetch_recent_diagnoses("http://agent", user_id="user-1", limit=3)
+
+    assert records == []
+    assert request_params == {"limit": 3, "user_id": "user-1"}
+    assert request_headers == {"Authorization": "Bearer secret-1"}
+
+
+def test_fetch_diagnosis_stats_scopes_by_user(monkeypatch):
+    request_params = {}
+    request_headers = {}
+
+    def fake_get(url, *, params, headers, timeout):
+        request_params.update(params)
+        request_headers.update(headers)
+        return Response(
+            200,
+            json={"total": 0, "by_fault_type": {}, "by_severity": {}, "daily_counts": []},
+            request=Request("GET", url),
+        )
+
+    monkeypatch.setattr("httpx.get", fake_get)
+
+    stats = fetch_diagnosis_stats("http://agent", user_id="user-1", days=14)
+
+    assert stats == {"total": 0, "by_fault_type": {}, "by_severity": {}, "daily_counts": []}
+    assert request_params == {"days": 14, "user_id": "user-1"}
+    assert request_headers == {}
+
+
+def test_fetch_agent_observability_scopes_by_user(monkeypatch):
+    request_params = {}
+    request_headers = {}
+
+    def fake_get(url, *, params, headers, timeout):
+        request_params.update(params)
+        request_headers.update(headers)
+        return Response(
+            200,
+            json={
+                "total_records": 0,
+                "records_with_trace": 0,
+                "trace_coverage_rate": 0.0,
+                "total_trace_steps": 0,
+                "average_trace_steps_per_record": 0.0,
+                "failed_trace_records": 0,
+                "failed_trace_steps": 0,
+                "knowledge_hit_records": 0,
+                "knowledge_hit_rate": 0.0,
+                "similar_incident_hit_records": 0,
+                "similar_incident_hit_rate": 0.0,
+                "quality_evaluated_records": 0,
+                "average_quality_score": 0.0,
+                "average_runtime_ms": 0.0,
+                "p95_runtime_ms": 0.0,
+                "average_model_latency_ms": 0.0,
+                "p95_model_latency_ms": 0.0,
+                "token_usage_records": 0,
+                "total_input_tokens": 0,
+                "total_output_tokens": 0,
+                "total_tokens": 0,
+                "average_total_tokens": 0.0,
+                "total_estimated_cost_usd": 0.0,
+                "average_estimated_cost_usd": 0.0,
+                "low_quality_records": 0,
+                "reference_accuracy_failed_records": 0,
+                "step_stats": [],
+                "failure_reasons": [],
+            },
+            request=Request("GET", url),
+        )
+
+    monkeypatch.setenv("AUTH_SECRET", "secret-obs")
+    monkeypatch.setattr("httpx.get", fake_get)
+
+    observability = fetch_agent_observability("http://agent", user_id="user-1", limit=50)
+
+    assert observability is not None
+    assert observability["total_records"] == 0
+    assert request_params == {"limit": 50, "user_id": "user-1"}
+    assert request_headers == {"Authorization": "Bearer secret-obs"}
+
+
+def test_fetch_recent_chat_threads_uses_auth_headers(monkeypatch):
+    request_params = {}
+    request_headers = {}
+
+    def fake_get(url, *, params, headers, timeout):
+        request_params.update(params)
+        request_headers.update(headers)
+        return Response(200, json=[], request=Request("GET", url))
+
+    monkeypatch.setenv("AUTH_SECRET", "secret-2")
+    monkeypatch.setattr("httpx.get", fake_get)
+
+    threads = fetch_recent_chat_threads(
+        "http://agent",
+        user_id="user-1",
+        agent_id="logmind",
+        limit=6,
+    )
+
+    assert threads == []
+    assert request_params == {"limit": 6, "user_id": "user-1", "agent_id": "logmind"}
+    assert request_headers == {"Authorization": "Bearer secret-2"}
+
+
+def test_preview_log_file_uses_auth_headers(monkeypatch):
+    request_headers = {}
+
+    class UploadedFile:
+        name = "app.log"
+        type = "text/plain"
+
+        def getvalue(self):
+            return b"error"
+
+    def fake_post(url, *, files, headers, timeout):
+        request_headers.update(headers)
+        return Response(
+            200,
+            json={
+                "filename": files["file"][0],
+                "size_bytes": 5,
+                "truncated": False,
+                "content": "error",
+                "diagnostic_message": "diagnose error",
+            },
+            request=Request("POST", url),
+        )
+
+    monkeypatch.setenv("AUTH_SECRET", "secret-3")
+    monkeypatch.setattr("httpx.post", fake_post)
+
+    preview = preview_log_file("http://agent", UploadedFile())
+
+    assert preview["filename"] == "app.log"
+    assert request_headers == {"Authorization": "Bearer secret-3"}
+
+
+def test_get_auth_headers_without_secret(monkeypatch):
+    monkeypatch.delenv("AUTH_SECRET", raising=False)
+
+    assert get_auth_headers() == {}
+
+
 def test_app_settings(mock_agent_client):
     """Test the full app - happy path"""
-    at = AppTest.from_file("../../src/streamlit_app.py")
+    at = app_test()
     at.query_params["user_id"] = "1234"
     at.run()
 
@@ -75,10 +255,10 @@ def test_app_settings(mock_agent_client):
 def test_app_thread_id_history(mock_agent_client):
     """Test the thread_id is generated"""
 
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
 
     # Reset and set thread_id
-    at = AppTest.from_file("../../src/streamlit_app.py")
+    at = app_test()
     at.query_params["thread_id"] = "1234"
     HISTORY = [
         ChatMessage(type="human", content="What is the weather?"),
@@ -100,7 +280,7 @@ def test_app_thread_id_history(mock_agent_client):
 def test_app_resume_with_agent_param(mock_agent_client):
     """An ?agent= URL param scopes the resumed history to that agent's graph."""
 
-    at = AppTest.from_file("../../src/streamlit_app.py")
+    at = app_test()
     at.query_params["thread_id"] = "1234"
     at.query_params["agent"] = "chatbot"
     HISTORY = [
@@ -127,7 +307,7 @@ def test_app_feedback(mock_agent_client):
 @pytest.mark.asyncio
 async def test_app_streaming(mock_agent_client):
     """Test the app with streaming enabled - including tool messages"""
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
 
     # Setup mock streaming response
     PROMPT = "What is 6 * 7?"
@@ -156,11 +336,11 @@ async def test_app_streaming(mock_agent_client):
     response = at.chat_message[1]
     tool_status = response.status[0]
     assert response.avatar == "assistant"
-    assert tool_status.label == "🛠️ Tool Call: calculator"
+    assert tool_status.label == "🛠️ 工具调用：calculator"
     assert tool_status.icon == ":material/check:"
-    assert tool_status.markdown[0].value == "Input:"
+    assert tool_status.markdown[0].value == "输入："
     assert tool_status.json[0].value == '{"expression": "6 * 7"}'
-    assert tool_status.markdown[1].value == "Output:"
+    assert tool_status.markdown[1].value == "输出："
     assert tool_status.markdown[2].value == "42"
     assert response.markdown[-1].value == "The answer is 42"
     assert not at.exception
@@ -169,7 +349,7 @@ async def test_app_streaming(mock_agent_client):
 @pytest.mark.asyncio
 async def test_app_init_error(mock_agent_client):
     """Test the app with an error in the agent initialization"""
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
 
     # Setup mock streaming response
     PROMPT = "What is 6 * 7?"
@@ -182,12 +362,12 @@ async def test_app_init_error(mock_agent_client):
     assert at.chat_message[0].avatar == "assistant"
     assert at.chat_message[1].avatar == "user"
     assert at.chat_message[1].markdown[0].value == PROMPT
-    assert at.error[0].value == "Error generating response: Error connecting to agent"
+    assert at.error[0].value == "生成回复失败：Error connecting to agent"
     assert not at.exception
 
 
 def test_app_new_chat_btn(mock_agent_client):
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
     thread_id_a = at.session_state.thread_id
 
     at.sidebar.button[0].click().run()
@@ -339,7 +519,7 @@ def multi_agent_messages():
 async def test_app_streaming_single_sub_agent(mock_agent_client, multi_agent_messages):
     """Test a single sub-agent with multiple tool calls to verify popover functionality"""
 
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
 
     PROMPT = "Test single sub-agent with multiple tools"
 
@@ -386,10 +566,10 @@ async def test_app_streaming_single_sub_agent(mock_agent_client, multi_agent_mes
     )
     assert popover_1.proto.popover.label == "do_work_1"
     assert popover_1.proto.popover.icon == "🛠️"
-    assert popover_1.markdown[0].value == "**Tool:** do_work_1"
-    assert popover_1.markdown[1].value == "**Input:**"
+    assert popover_1.markdown[0].value == "**工具：** do_work_1"
+    assert popover_1.markdown[1].value == "**输入：**"
     assert '"my-arg": "value"' in popover_1.json[0].value
-    assert popover_1.markdown[2].value == "**Output:**"
+    assert popover_1.markdown[2].value == "**输出：**"
     assert popover_1.markdown[3].value == "Tool 1 complete"
 
     assert status_agent.children[2].value == "Starting tool 2...", (
@@ -409,7 +589,7 @@ async def test_app_streaming_single_sub_agent(mock_agent_client, multi_agent_mes
 async def test_app_streaming_sequential_sub_agents(mock_agent_client, multi_agent_messages):
     """Test when the supervisor agent transfers to sub agent A, then back to supervisor, then transfers to sub agent C, and back again"""
 
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
 
     PROMPT = "Test multiple transfer back patterns"
 
@@ -457,10 +637,10 @@ async def test_app_streaming_sequential_sub_agents(mock_agent_client, multi_agen
     assert popover_a.type == "popover"
     assert popover_a.proto.popover.label == "do_work_1"
     assert popover_a.proto.popover.icon == "🛠️"
-    assert popover_a.markdown[0].value == "**Tool:** do_work_1"
-    assert popover_a.markdown[1].value == "**Input:**"
+    assert popover_a.markdown[0].value == "**工具：** do_work_1"
+    assert popover_a.markdown[1].value == "**输入：**"
     assert popover_a.json[0].value == '{"my-arg": "value"}'
-    assert popover_a.markdown[2].value == "**Output:**"
+    assert popover_a.markdown[2].value == "**输出：**"
     assert popover_a.markdown[3].value == "Tool 1 complete"
 
     assert ai_message.children[2].value == "Now transferring to agent C...", (
@@ -478,10 +658,10 @@ async def test_app_streaming_sequential_sub_agents(mock_agent_client, multi_agen
     assert popover_c.type == "popover"
     assert popover_c.proto.popover.label == "do_work_2"
     assert popover_c.proto.popover.icon == "🛠️"
-    assert popover_c.markdown[0].value == "**Tool:** do_work_2"
-    assert popover_c.markdown[1].value == "**Input:**"
+    assert popover_c.markdown[0].value == "**工具：** do_work_2"
+    assert popover_c.markdown[1].value == "**输入：**"
     assert popover_c.json[0].value == '{"my-arg-2": "value"}'
-    assert popover_c.markdown[2].value == "**Output:**"
+    assert popover_c.markdown[2].value == "**输出：**"
     assert popover_c.markdown[3].value == "Tool 2 complete"
 
     assert ai_message.children[4].value == "All agents have completed their tasks successfully.", (
@@ -499,7 +679,7 @@ async def test_app_streaming_sequential_sub_agents(mock_agent_client, multi_agen
 async def test_app_streaming_nested_sub_agents(mock_agent_client, multi_agent_messages):
     """Test nested sub-agents where agent B is a sub-agent of agent A"""
 
-    at = AppTest.from_file("../../src/streamlit_app.py").run()
+    at = app_test().run()
 
     PROMPT = "Test nested sub-agents"
 
@@ -547,10 +727,10 @@ async def test_app_streaming_nested_sub_agents(mock_agent_client, multi_agent_me
     assert popover_a.type == "popover"
     assert popover_a.proto.popover.label == "do_work_1"
     assert popover_a.proto.popover.icon == "🛠️"
-    assert popover_a.markdown[0].value == "**Tool:** do_work_1"
-    assert popover_a.markdown[1].value == "**Input:**"
+    assert popover_a.markdown[0].value == "**工具：** do_work_1"
+    assert popover_a.markdown[1].value == "**输入：**"
     assert popover_a.json[0].value == '{"my-arg": "value"}'
-    assert popover_a.markdown[2].value == "**Output:**"
+    assert popover_a.markdown[2].value == "**输出：**"
     assert popover_a.markdown[3].value == "Tool 1 complete"
 
     assert status_a.children[2].value == "Agent A delegating to agent B...", (
@@ -569,10 +749,10 @@ async def test_app_streaming_nested_sub_agents(mock_agent_client, multi_agent_me
     assert popover_b.type == "popover"
     assert popover_b.proto.popover.label == "do_work_2"
     assert popover_b.proto.popover.icon == "🛠️"
-    assert popover_b.markdown[0].value == "**Tool:** do_work_2"
-    assert popover_b.markdown[1].value == "**Input:**"
+    assert popover_b.markdown[0].value == "**工具：** do_work_2"
+    assert popover_b.markdown[1].value == "**输入：**"
     assert popover_b.json[0].value == '{"my-arg-2": "value"}'
-    assert popover_b.markdown[2].value == "**Output:**"
+    assert popover_b.markdown[2].value == "**输出：**"
     assert popover_b.markdown[3].value == "Tool 2 complete"
 
     assert ai_message.children[2].value == "All agents have completed their tasks successfully.", (

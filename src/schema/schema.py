@@ -76,6 +76,14 @@ class StreamInput(UserInput):
     )
 
 
+class LogFilePreview(BaseModel):
+    filename: str = Field(description="上传的日志文件名")
+    size_bytes: int = Field(description="日志文件大小")
+    truncated: bool = Field(description="日志内容是否因为过长被截断")
+    content: str = Field(description="脱敏后的日志内容预览")
+    diagnostic_message: str = Field(description="可以直接提交给 LogMind 的诊断输入")
+
+
 class ToolCall(TypedDict):
     """Represents a request to call a tool."""
 
@@ -173,3 +181,13 @@ class ChatHistoryInput(BaseModel):
 
 class ChatHistory(BaseModel):
     messages: list[ChatMessage]
+
+
+class ChatThreadSummary(BaseModel):
+    thread_id: str = Field(description="会话 ID")
+    user_id: str | None = Field(default=None, description="用户 ID")
+    agent_id: str = Field(description="Agent ID")
+    title: str = Field(description="会话标题")
+    last_message_summary: str = Field(description="最近一条用户消息摘要")
+    created_at: str = Field(description="会话创建时间")
+    updated_at: str = Field(description="会话最后更新时间")

@@ -1,0 +1,1042 @@
+[
+  {
+    "id": "report_spring_boot_port_conflict",
+    "name": "Spring Boot 端口占用报告评估",
+    "input_summary": "APPLICATION FAILED TO START. Web server failed to start. Port 8080 was already in use.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：port_conflict\n- 严重等级：中\n- 影响组件：Web 服务端口\n- 简要说明：Port 8080 导致当前服务诊断为 Spring Boot 端口占用外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Port 8080\n- 输入摘要：APPLICATION FAILED TO START. Web server failed to start. Port 8080 was already in use.\n\n## 3. 可能原因分析\n- 日志中的 Port 8080 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。\n\n## 4. 建议排查步骤\n- 围绕 Port 8080 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。\n\n## 5. 修复建议\n- 处理 Port 8080 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n\n## 6. 后续预防建议\n- 统一维护端口规划，并在发布前增加端口占用检查。\n\n## 7. 参考知识\n- 端口冲突排查手册：日志中的 Port 8080 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 Port 8080 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 Port 8080 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n",
+    "expected_fault_type": "port_conflict",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Port 8080"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "端口冲突排查手册",
+        "source": "docs/knowledge/port_conflict.md",
+        "snippet": "日志中的 Port 8080 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 Port 8080 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 Port 8080 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Port 8080"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_spring_boot_config_placeholder",
+    "name": "Spring Boot 配置占位符缺失报告评估",
+    "input_summary": "Could not resolve placeholder DB_HOST. Application failed to start.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：configuration_error\n- 严重等级：中\n- 影响组件：应用配置\n- 简要说明：Could not resolve placeholder 导致当前服务诊断为 Spring Boot 配置占位符缺失外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Could not resolve placeholder\n- 输入摘要：Could not resolve placeholder DB_HOST. Application failed to start.\n\n## 3. 可能原因分析\n- 日志中的 Could not resolve placeholder 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。\n\n## 4. 建议排查步骤\n- 围绕 Could not resolve placeholder 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。\n\n## 5. 修复建议\n- 修正 Could not resolve placeholder 对应配置后重新发布，并在启动阶段加入配置校验。\n\n## 6. 后续预防建议\n- 为关键配置增加模板、默认值说明和发布前校验。\n\n## 7. 参考知识\n- 配置错误排查手册：日志中的 Could not resolve placeholder 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 Could not resolve placeholder 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 Could not resolve placeholder 对应配置后重新发布，并在启动阶段加入配置校验。\n",
+    "expected_fault_type": "configuration_error",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Could not resolve placeholder"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "配置错误排查手册",
+        "source": "docs/knowledge/configuration_error.md",
+        "snippet": "日志中的 Could not resolve placeholder 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 Could not resolve placeholder 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 Could not resolve placeholder 对应配置后重新发布，并在启动阶段加入配置校验。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Could not resolve placeholder"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_spring_boot_bind_properties",
+    "name": "Spring Boot 配置绑定失败报告评估",
+    "input_summary": "Failed to bind properties under spring.datasource.url. Configuration property is invalid.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：configuration_error\n- 严重等级：中\n- 影响组件：应用配置\n- 简要说明：Failed to bind properties 导致当前服务诊断为 Spring Boot 配置绑定失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Failed to bind properties\n- 输入摘要：Failed to bind properties under spring.datasource.url. Configuration property is invalid.\n\n## 3. 可能原因分析\n- 日志中的 Failed to bind properties 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。\n\n## 4. 建议排查步骤\n- 围绕 Failed to bind properties 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。\n\n## 5. 修复建议\n- 修正 Failed to bind properties 对应配置后重新发布，并在启动阶段加入配置校验。\n\n## 6. 后续预防建议\n- 为关键配置增加模板、默认值说明和发布前校验。\n\n## 7. 参考知识\n- 配置错误排查手册：日志中的 Failed to bind properties 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 Failed to bind properties 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 Failed to bind properties 对应配置后重新发布，并在启动阶段加入配置校验。\n",
+    "expected_fault_type": "configuration_error",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Failed to bind properties"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "配置错误排查手册",
+        "source": "docs/knowledge/configuration_error.md",
+        "snippet": "日志中的 Failed to bind properties 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 Failed to bind properties 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 Failed to bind properties 对应配置后重新发布，并在启动阶段加入配置校验。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Failed to bind properties"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_spring_boot_null_pointer",
+    "name": "Spring Boot 空指针异常报告评估",
+    "input_summary": "java.lang.NullPointerException: Cannot invoke service because repository is null",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：configuration_error\n- 严重等级：中\n- 影响组件：应用配置\n- 简要说明：NullPointerException 导致当前服务诊断为 Spring Boot 空指针异常外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：NullPointerException\n- 输入摘要：java.lang.NullPointerException: Cannot invoke service because repository is null\n\n## 3. 可能原因分析\n- 日志中的 NullPointerException 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。\n\n## 4. 建议排查步骤\n- 围绕 NullPointerException 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。\n\n## 5. 修复建议\n- 修正 NullPointerException 对应配置后重新发布，并在启动阶段加入配置校验。\n\n## 6. 后续预防建议\n- 为关键配置增加模板、默认值说明和发布前校验。\n\n## 7. 参考知识\n- 配置错误排查手册：日志中的 NullPointerException 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 NullPointerException 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 NullPointerException 对应配置后重新发布，并在启动阶段加入配置校验。\n",
+    "expected_fault_type": "configuration_error",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "NullPointerException"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "配置错误排查手册",
+        "source": "docs/knowledge/configuration_error.md",
+        "snippet": "日志中的 NullPointerException 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 NullPointerException 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 NullPointerException 对应配置后重新发布，并在启动阶段加入配置校验。"
+      }
+    ],
+    "required_grounding_terms": [
+      "NullPointerException"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_mysql_access_denied",
+    "name": "MySQL 认证失败报告评估",
+    "input_summary": "java.sql.SQLException: Access denied for user app_user while connecting to MySQL.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：connection_failure\n- 严重等级：中\n- 影响组件：下游连接\n- 简要说明：Access denied for user 导致当前服务诊断为 MySQL 认证失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Access denied for user\n- 输入摘要：java.sql.SQLException: Access denied for user app_user while connecting to MySQL.\n\n## 3. 可能原因分析\n- 日志中的 Access denied for user 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。\n\n## 4. 建议排查步骤\n- 围绕 Access denied for user 检查下游存活状态、网络连通性、连接池配置和账号权限。\n\n## 5. 修复建议\n- 恢复 Access denied for user 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n\n## 6. 后续预防建议\n- 为核心依赖增加健康检查、连接失败告警和降级策略。\n\n## 7. 参考知识\n- 连接失败排查手册：日志中的 Access denied for user 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 Access denied for user 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 Access denied for user 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n",
+    "expected_fault_type": "connection_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Access denied for user"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "连接失败排查手册",
+        "source": "docs/knowledge/connection_failure.md",
+        "snippet": "日志中的 Access denied for user 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 Access denied for user 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 Access denied for user 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Access denied for user"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_mysql_communications_link",
+    "name": "MySQL 链路失败报告评估",
+    "input_summary": "Communications link failure to database.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：connection_failure\n- 严重等级：中\n- 影响组件：下游连接\n- 简要说明：Communications link failure 导致当前服务诊断为 MySQL 链路失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Communications link failure\n- 输入摘要：Communications link failure to database.\n\n## 3. 可能原因分析\n- 日志中的 Communications link failure 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。\n\n## 4. 建议排查步骤\n- 围绕 Communications link failure 检查下游存活状态、网络连通性、连接池配置和账号权限。\n\n## 5. 修复建议\n- 恢复 Communications link failure 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n\n## 6. 后续预防建议\n- 为核心依赖增加健康检查、连接失败告警和降级策略。\n\n## 7. 参考知识\n- 连接失败排查手册：日志中的 Communications link failure 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 Communications link failure 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 Communications link failure 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n",
+    "expected_fault_type": "connection_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Communications link failure"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "连接失败排查手册",
+        "source": "docs/knowledge/connection_failure.md",
+        "snippet": "日志中的 Communications link failure 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 Communications link failure 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 Communications link failure 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Communications link failure"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_mysql_slow_query",
+    "name": "MySQL 慢查询报告评估",
+    "input_summary": "Slow query detected: SELECT * FROM orders took 18.5s rows_examined=1200000.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：database_slow_query\n- 严重等级：中\n- 影响组件：数据库\n- 简要说明：Slow query 导致当前服务诊断为 MySQL 慢查询外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Slow query\n- 输入摘要：Slow query detected: SELECT * FROM orders took 18.5s rows_examined=1200000.\n\n## 3. 可能原因分析\n- 日志中的 Slow query 指向数据库执行耗时异常，可能存在全表扫描、索引缺失或返回数据量过大。\n\n## 4. 建议排查步骤\n- 围绕 Slow query 查看执行计划、索引命中情况、扫描行数和慢查询日志。\n\n## 5. 修复建议\n- 优化 Slow query 对应 SQL，可以补充索引、收敛查询条件或分页处理。\n\n## 6. 后续预防建议\n- 上线前评审高频 SQL，并对慢查询阈值和扫描行数建立告警。\n\n## 7. 参考知识\n- 数据库慢查询排查手册：日志中的 Slow query 指向数据库执行耗时异常，可能存在全表扫描、索引缺失或返回数据量过大。 围绕 Slow query 查看执行计划、索引命中情况、扫描行数和慢查询日志。 优化 Slow query 对应 SQL，可以补充索引、收敛查询条件或分页处理。\n",
+    "expected_fault_type": "database_slow_query",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Slow query"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "数据库慢查询排查手册",
+        "source": "docs/knowledge/database_slow_query.md",
+        "snippet": "日志中的 Slow query 指向数据库执行耗时异常，可能存在全表扫描、索引缺失或返回数据量过大。 围绕 Slow query 查看执行计划、索引命中情况、扫描行数和慢查询日志。 优化 Slow query 对应 SQL，可以补充索引、收敛查询条件或分页处理。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Slow query"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_mysql_sql_syntax_error",
+    "name": "SQL 语法错误报告评估",
+    "input_summary": "java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax near from order.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：database_slow_query\n- 严重等级：中\n- 影响组件：数据库\n- 简要说明：SQLSyntaxErrorException 导致当前服务诊断为 SQL 语法错误外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：SQLSyntaxErrorException\n- 输入摘要：java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax near from order.\n\n## 3. 可能原因分析\n- 日志中的 SQLSyntaxErrorException 指向数据库执行耗时异常，可能存在全表扫描、索引缺失或返回数据量过大。\n\n## 4. 建议排查步骤\n- 围绕 SQLSyntaxErrorException 查看执行计划、索引命中情况、扫描行数和慢查询日志。\n\n## 5. 修复建议\n- 优化 SQLSyntaxErrorException 对应 SQL，可以补充索引、收敛查询条件或分页处理。\n\n## 6. 后续预防建议\n- 上线前评审高频 SQL，并对慢查询阈值和扫描行数建立告警。\n\n## 7. 参考知识\n- 数据库慢查询排查手册：日志中的 SQLSyntaxErrorException 指向数据库执行耗时异常，可能存在全表扫描、索引缺失或返回数据量过大。 围绕 SQLSyntaxErrorException 查看执行计划、索引命中情况、扫描行数和慢查询日志。 优化 SQLSyntaxErrorException 对应 SQL，可以补充索引、收敛查询条件或分页处理。\n",
+    "expected_fault_type": "database_slow_query",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "SQLSyntaxErrorException"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "数据库慢查询排查手册",
+        "source": "docs/knowledge/database_slow_query.md",
+        "snippet": "日志中的 SQLSyntaxErrorException 指向数据库执行耗时异常，可能存在全表扫描、索引缺失或返回数据量过大。 围绕 SQLSyntaxErrorException 查看执行计划、索引命中情况、扫描行数和慢查询日志。 优化 SQLSyntaxErrorException 对应 SQL，可以补充索引、收敛查询条件或分页处理。"
+      }
+    ],
+    "required_grounding_terms": [
+      "SQLSyntaxErrorException"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_nginx_502",
+    "name": "Nginx 502报告评估",
+    "input_summary": "Nginx 502 Bad Gateway: upstream prematurely closed connection while reading response header from upstream.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：gateway_5xx\n- 严重等级：中\n- 影响组件：网关和 upstream 服务\n- 简要说明：502 Bad Gateway 导致当前服务诊断为 Nginx 502外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：502 Bad Gateway\n- 输入摘要：Nginx 502 Bad Gateway: upstream prematurely closed connection while reading response header from upstream.\n\n## 3. 可能原因分析\n- 日志中的 502 Bad Gateway 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。\n\n## 4. 建议排查步骤\n- 围绕 502 Bad Gateway 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。\n\n## 5. 修复建议\n- 恢复 502 Bad Gateway 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。\n\n## 6. 后续预防建议\n- 为 upstream 增加健康探测、熔断和 5xx 比例告警。\n\n## 7. 参考知识\n- 网关 5xx 错误排查手册：日志中的 502 Bad Gateway 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。 围绕 502 Bad Gateway 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。 恢复 502 Bad Gateway 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。\n",
+    "expected_fault_type": "gateway_5xx",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "502 Bad Gateway"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "网关 5xx 错误排查手册",
+        "source": "docs/knowledge/gateway_5xx.md",
+        "snippet": "日志中的 502 Bad Gateway 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。 围绕 502 Bad Gateway 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。 恢复 502 Bad Gateway 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。"
+      }
+    ],
+    "required_grounding_terms": [
+      "502 Bad Gateway"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_nginx_504_timeout",
+    "name": "Nginx 504 超时报告评估",
+    "input_summary": "Nginx error: upstream timed out while reading response header, returned 504 gateway timeout.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：gateway_5xx\n- 严重等级：中\n- 影响组件：网关和 upstream 服务\n- 简要说明：upstream timed out 导致当前服务诊断为 Nginx 504 超时外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：upstream timed out\n- 输入摘要：Nginx error: upstream timed out while reading response header, returned 504 gateway timeout.\n\n## 3. 可能原因分析\n- 日志中的 upstream timed out 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。\n\n## 4. 建议排查步骤\n- 围绕 upstream timed out 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。\n\n## 5. 修复建议\n- 恢复 upstream timed out 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。\n\n## 6. 后续预防建议\n- 为 upstream 增加健康探测、熔断和 5xx 比例告警。\n\n## 7. 参考知识\n- 网关 5xx 错误排查手册：日志中的 upstream timed out 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。 围绕 upstream timed out 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。 恢复 upstream timed out 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。\n",
+    "expected_fault_type": "gateway_5xx",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "upstream timed out"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "网关 5xx 错误排查手册",
+        "source": "docs/knowledge/gateway_5xx.md",
+        "snippet": "日志中的 upstream timed out 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。 围绕 upstream timed out 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。 恢复 upstream timed out 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。"
+      }
+    ],
+    "required_grounding_terms": [
+      "upstream timed out"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_nginx_connect_failed",
+    "name": "Nginx upstream 连接失败报告评估",
+    "input_summary": "Nginx connect() failed while connecting to upstream, returned 502 bad gateway.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：gateway_5xx\n- 严重等级：中\n- 影响组件：网关和 upstream 服务\n- 简要说明：connect() failed 导致当前服务诊断为 Nginx upstream 连接失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：connect() failed\n- 输入摘要：Nginx connect() failed while connecting to upstream, returned 502 bad gateway.\n\n## 3. 可能原因分析\n- 日志中的 connect() failed 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。\n\n## 4. 建议排查步骤\n- 围绕 connect() failed 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。\n\n## 5. 修复建议\n- 恢复 connect() failed 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。\n\n## 6. 后续预防建议\n- 为 upstream 增加健康探测、熔断和 5xx 比例告警。\n\n## 7. 参考知识\n- 网关 5xx 错误排查手册：日志中的 connect() failed 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。 围绕 connect() failed 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。 恢复 connect() failed 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。\n",
+    "expected_fault_type": "gateway_5xx",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "connect() failed"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "网关 5xx 错误排查手册",
+        "source": "docs/knowledge/gateway_5xx.md",
+        "snippet": "日志中的 connect() failed 指向网关访问 upstream 失败，常见原因是后端服务异常、连接被关闭或超时。 围绕 connect() failed 同时检查网关 access/error 日志、upstream 健康状态和应用错误日志。 恢复 connect() failed 对应的 upstream 服务或调整网关超时、连接池和负载均衡配置。"
+      }
+    ],
+    "required_grounding_terms": [
+      "connect() failed"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_nginx_port_bind",
+    "name": "Nginx 端口绑定失败报告评估",
+    "input_summary": "nginx bind failed: Address already in use.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：port_conflict\n- 严重等级：中\n- 影响组件：Web 服务端口\n- 简要说明：Address already in use 导致当前服务诊断为 Nginx 端口绑定失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Address already in use\n- 输入摘要：nginx bind failed: Address already in use.\n\n## 3. 可能原因分析\n- 日志中的 Address already in use 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。\n\n## 4. 建议排查步骤\n- 围绕 Address already in use 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。\n\n## 5. 修复建议\n- 处理 Address already in use 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n\n## 6. 后续预防建议\n- 统一维护端口规划，并在发布前增加端口占用检查。\n\n## 7. 参考知识\n- 端口冲突排查手册：日志中的 Address already in use 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 Address already in use 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 Address already in use 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n",
+    "expected_fault_type": "port_conflict",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Address already in use"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "端口冲突排查手册",
+        "source": "docs/knowledge/port_conflict.md",
+        "snippet": "日志中的 Address already in use 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 Address already in use 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 Address already in use 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Address already in use"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_java_oom_heap",
+    "name": "Java 堆内存溢出报告评估",
+    "input_summary": "Exception in thread main java.lang.OutOfMemoryError: Java heap space",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：resource_exhaustion\n- 严重等级：中\n- 影响组件：应用资源\n- 简要说明：OutOfMemoryError 导致当前服务诊断为 Java 堆内存溢出外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：OutOfMemoryError\n- 输入摘要：Exception in thread main java.lang.OutOfMemoryError: Java heap space\n\n## 3. 可能原因分析\n- 日志中的 OutOfMemoryError 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。\n\n## 4. 建议排查步骤\n- 围绕 OutOfMemoryError 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。\n\n## 5. 修复建议\n- 缓解 OutOfMemoryError 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n\n## 6. 后续预防建议\n- 补充资源水位告警、压测基线和容量评估。\n\n## 7. 参考知识\n- 资源耗尽排查手册：日志中的 OutOfMemoryError 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 OutOfMemoryError 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 OutOfMemoryError 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "OutOfMemoryError"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "资源耗尽排查手册",
+        "source": "docs/knowledge/resource_exhaustion.md",
+        "snippet": "日志中的 OutOfMemoryError 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 OutOfMemoryError 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 OutOfMemoryError 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。"
+      }
+    ],
+    "required_grounding_terms": [
+      "OutOfMemoryError"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_java_gc_overhead",
+    "name": "Java GC 开销超限报告评估",
+    "input_summary": "java.lang.OutOfMemoryError: GC overhead limit exceeded",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：resource_exhaustion\n- 严重等级：中\n- 影响组件：应用资源\n- 简要说明：GC overhead limit exceeded 导致当前服务诊断为 Java GC 开销超限外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：GC overhead limit exceeded\n- 输入摘要：java.lang.OutOfMemoryError: GC overhead limit exceeded\n\n## 3. 可能原因分析\n- 日志中的 GC overhead limit exceeded 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。\n\n## 4. 建议排查步骤\n- 围绕 GC overhead limit exceeded 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。\n\n## 5. 修复建议\n- 缓解 GC overhead limit exceeded 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n\n## 6. 后续预防建议\n- 补充资源水位告警、压测基线和容量评估。\n\n## 7. 参考知识\n- 资源耗尽排查手册：日志中的 GC overhead limit exceeded 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 GC overhead limit exceeded 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 GC overhead limit exceeded 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "GC overhead limit exceeded"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "资源耗尽排查手册",
+        "source": "docs/knowledge/resource_exhaustion.md",
+        "snippet": "日志中的 GC overhead limit exceeded 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 GC overhead limit exceeded 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 GC overhead limit exceeded 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。"
+      }
+    ],
+    "required_grounding_terms": [
+      "GC overhead limit exceeded"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_java_metaspace",
+    "name": "Java Metaspace 溢出报告评估",
+    "input_summary": "java.lang.OutOfMemoryError: Metaspace while loading classes",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：resource_exhaustion\n- 严重等级：中\n- 影响组件：应用资源\n- 简要说明：Metaspace 导致当前服务诊断为 Java Metaspace 溢出外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Metaspace\n- 输入摘要：java.lang.OutOfMemoryError: Metaspace while loading classes\n\n## 3. 可能原因分析\n- 日志中的 Metaspace 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。\n\n## 4. 建议排查步骤\n- 围绕 Metaspace 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。\n\n## 5. 修复建议\n- 缓解 Metaspace 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n\n## 6. 后续预防建议\n- 补充资源水位告警、压测基线和容量评估。\n\n## 7. 参考知识\n- 资源耗尽排查手册：日志中的 Metaspace 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 Metaspace 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 Metaspace 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Metaspace"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "资源耗尽排查手册",
+        "source": "docs/knowledge/resource_exhaustion.md",
+        "snippet": "日志中的 Metaspace 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 Metaspace 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 Metaspace 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Metaspace"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_linux_too_many_files",
+    "name": "Linux 文件句柄耗尽报告评估",
+    "input_summary": "ERROR java.io.IOException: too many open files while accepting socket",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：resource_exhaustion\n- 严重等级：中\n- 影响组件：应用资源\n- 简要说明：too many open files 导致当前服务诊断为 Linux 文件句柄耗尽外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：too many open files\n- 输入摘要：ERROR java.io.IOException: too many open files while accepting socket\n\n## 3. 可能原因分析\n- 日志中的 too many open files 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。\n\n## 4. 建议排查步骤\n- 围绕 too many open files 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。\n\n## 5. 修复建议\n- 缓解 too many open files 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n\n## 6. 后续预防建议\n- 补充资源水位告警、压测基线和容量评估。\n\n## 7. 参考知识\n- 资源耗尽排查手册：日志中的 too many open files 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 too many open files 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 too many open files 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "too many open files"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "资源耗尽排查手册",
+        "source": "docs/knowledge/resource_exhaustion.md",
+        "snippet": "日志中的 too many open files 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 too many open files 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 too many open files 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。"
+      }
+    ],
+    "required_grounding_terms": [
+      "too many open files"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_kubernetes_crashloopbackoff",
+    "name": "Kubernetes CrashLoopBackOff报告评估",
+    "input_summary": "kubectl get pods shows app in CrashLoopBackOff. Back-off restarting failed container.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：kubernetes_pod_failure\n- 严重等级：中\n- 影响组件：Kubernetes Pod\n- 简要说明：CrashLoopBackOff 导致当前服务诊断为 Kubernetes CrashLoopBackOff外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：CrashLoopBackOff\n- 输入摘要：kubectl get pods shows app in CrashLoopBackOff. Back-off restarting failed container.\n\n## 3. 可能原因分析\n- 日志中的 CrashLoopBackOff 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。\n\n## 4. 建议排查步骤\n- 围绕 CrashLoopBackOff 查看 Pod events、容器日志、探针配置和资源限制。\n\n## 5. 修复建议\n- 修复 CrashLoopBackOff 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。\n\n## 6. 后续预防建议\n- 发布前校验镜像可拉取、探针可用和资源配置合理。\n\n## 7. 参考知识\n- Kubernetes Pod 异常排查手册：日志中的 CrashLoopBackOff 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。 围绕 CrashLoopBackOff 查看 Pod events、容器日志、探针配置和资源限制。 修复 CrashLoopBackOff 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。\n",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "CrashLoopBackOff"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "Kubernetes Pod 异常排查手册",
+        "source": "docs/knowledge/kubernetes_pod_failure.md",
+        "snippet": "日志中的 CrashLoopBackOff 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。 围绕 CrashLoopBackOff 查看 Pod events、容器日志、探针配置和资源限制。 修复 CrashLoopBackOff 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。"
+      }
+    ],
+    "required_grounding_terms": [
+      "CrashLoopBackOff"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_kubernetes_imagepullbackoff",
+    "name": "Kubernetes ImagePullBackOff报告评估",
+    "input_summary": "Pod failed to start: ImagePullBackOff while pulling image.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：kubernetes_pod_failure\n- 严重等级：中\n- 影响组件：Kubernetes Pod\n- 简要说明：ImagePullBackOff 导致当前服务诊断为 Kubernetes ImagePullBackOff外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：ImagePullBackOff\n- 输入摘要：Pod failed to start: ImagePullBackOff while pulling image.\n\n## 3. 可能原因分析\n- 日志中的 ImagePullBackOff 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。\n\n## 4. 建议排查步骤\n- 围绕 ImagePullBackOff 查看 Pod events、容器日志、探针配置和资源限制。\n\n## 5. 修复建议\n- 修复 ImagePullBackOff 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。\n\n## 6. 后续预防建议\n- 发布前校验镜像可拉取、探针可用和资源配置合理。\n\n## 7. 参考知识\n- Kubernetes Pod 异常排查手册：日志中的 ImagePullBackOff 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。 围绕 ImagePullBackOff 查看 Pod events、容器日志、探针配置和资源限制。 修复 ImagePullBackOff 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。\n",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "ImagePullBackOff"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "Kubernetes Pod 异常排查手册",
+        "source": "docs/knowledge/kubernetes_pod_failure.md",
+        "snippet": "日志中的 ImagePullBackOff 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。 围绕 ImagePullBackOff 查看 Pod events、容器日志、探针配置和资源限制。 修复 ImagePullBackOff 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。"
+      }
+    ],
+    "required_grounding_terms": [
+      "ImagePullBackOff"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_kubernetes_readiness_probe",
+    "name": "Kubernetes 探针失败报告评估",
+    "input_summary": "Pod failed readiness probe failed and kubelet keeps restarting the container.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：kubernetes_pod_failure\n- 严重等级：中\n- 影响组件：Kubernetes Pod\n- 简要说明：readiness probe failed 导致当前服务诊断为 Kubernetes 探针失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：readiness probe failed\n- 输入摘要：Pod failed readiness probe failed and kubelet keeps restarting the container.\n\n## 3. 可能原因分析\n- 日志中的 readiness probe failed 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。\n\n## 4. 建议排查步骤\n- 围绕 readiness probe failed 查看 Pod events、容器日志、探针配置和资源限制。\n\n## 5. 修复建议\n- 修复 readiness probe failed 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。\n\n## 6. 后续预防建议\n- 发布前校验镜像可拉取、探针可用和资源配置合理。\n\n## 7. 参考知识\n- Kubernetes Pod 异常排查手册：日志中的 readiness probe failed 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。 围绕 readiness probe failed 查看 Pod events、容器日志、探针配置和资源限制。 修复 readiness probe failed 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。\n",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "readiness probe failed"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "Kubernetes Pod 异常排查手册",
+        "source": "docs/knowledge/kubernetes_pod_failure.md",
+        "snippet": "日志中的 readiness probe failed 指向 Pod 生命周期异常，可能与镜像拉取、探针、资源限制或启动命令有关。 围绕 readiness probe failed 查看 Pod events、容器日志、探针配置和资源限制。 修复 readiness probe failed 对应的 Pod 启动条件，例如镜像、探针、资源 limit 或启动参数。"
+      }
+    ],
+    "required_grounding_terms": [
+      "readiness probe failed"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_kubernetes_oomkilled",
+    "name": "Kubernetes OOMKilled报告评估",
+    "input_summary": "Pod failed with reason OOMKilled after memory limit was exceeded.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：resource_exhaustion\n- 严重等级：中\n- 影响组件：应用资源\n- 简要说明：OOMKilled 导致当前服务诊断为 Kubernetes OOMKilled外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：OOMKilled\n- 输入摘要：Pod failed with reason OOMKilled after memory limit was exceeded.\n\n## 3. 可能原因分析\n- 日志中的 OOMKilled 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。\n\n## 4. 建议排查步骤\n- 围绕 OOMKilled 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。\n\n## 5. 修复建议\n- 缓解 OOMKilled 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n\n## 6. 后续预防建议\n- 补充资源水位告警、压测基线和容量评估。\n\n## 7. 参考知识\n- 资源耗尽排查手册：日志中的 OOMKilled 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 OOMKilled 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 OOMKilled 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。\n",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "OOMKilled"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "资源耗尽排查手册",
+        "source": "docs/knowledge/resource_exhaustion.md",
+        "snippet": "日志中的 OOMKilled 指向内存、文件句柄或容器资源达到限制，导致应用运行不稳定。 围绕 OOMKilled 检查内存、GC、文件句柄、容器 limit 和进程资源使用情况。 缓解 OOMKilled 对应的资源瓶颈，可以扩容、调整 JVM 参数或修复资源泄漏。"
+      }
+    ],
+    "required_grounding_terms": [
+      "OOMKilled"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_docker_container_exited",
+    "name": "Docker 容器退出报告评估",
+    "input_summary": "Docker container exited with code 137 immediately after startup.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：container_startup_failure\n- 严重等级：中\n- 影响组件：容器运行时\n- 简要说明：Docker 导致当前服务诊断为 Docker 容器退出外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Docker\n- 输入摘要：Docker container exited with code 137 immediately after startup.\n\n## 3. 可能原因分析\n- 日志中的 Docker 指向容器启动后异常退出，可能是入口脚本、端口、配置或资源限制问题。\n\n## 4. 建议排查步骤\n- 围绕 Docker 查看容器退出码、启动命令、环境变量和最近一次容器日志。\n\n## 5. 修复建议\n- 修复 Docker 对应的启动失败原因后重新拉起容器。\n\n## 6. 后续预防建议\n- 为镜像构建、启动脚本和运行参数增加发布前 smoke test。\n\n## 7. 参考知识\n- 容器启动失败排查手册：日志中的 Docker 指向容器启动后异常退出，可能是入口脚本、端口、配置或资源限制问题。 围绕 Docker 查看容器退出码、启动命令、环境变量和最近一次容器日志。 修复 Docker 对应的启动失败原因后重新拉起容器。\n",
+    "expected_fault_type": "container_startup_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Docker"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "容器启动失败排查手册",
+        "source": "docs/knowledge/container_startup_failure.md",
+        "snippet": "日志中的 Docker 指向容器启动后异常退出，可能是入口脚本、端口、配置或资源限制问题。 围绕 Docker 查看容器退出码、启动命令、环境变量和最近一次容器日志。 修复 Docker 对应的启动失败原因后重新拉起容器。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Docker"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_docker_entrypoint_failed",
+    "name": "Docker Entrypoint 失败报告评估",
+    "input_summary": "Docker container startup failed because entrypoint script returned error.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：container_startup_failure\n- 严重等级：中\n- 影响组件：容器运行时\n- 简要说明：Docker 导致当前服务诊断为 Docker Entrypoint 失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Docker\n- 输入摘要：Docker container startup failed because entrypoint script returned error.\n\n## 3. 可能原因分析\n- 日志中的 Docker 指向容器启动后异常退出，可能是入口脚本、端口、配置或资源限制问题。\n\n## 4. 建议排查步骤\n- 围绕 Docker 查看容器退出码、启动命令、环境变量和最近一次容器日志。\n\n## 5. 修复建议\n- 修复 Docker 对应的启动失败原因后重新拉起容器。\n\n## 6. 后续预防建议\n- 为镜像构建、启动脚本和运行参数增加发布前 smoke test。\n\n## 7. 参考知识\n- 容器启动失败排查手册：日志中的 Docker 指向容器启动后异常退出，可能是入口脚本、端口、配置或资源限制问题。 围绕 Docker 查看容器退出码、启动命令、环境变量和最近一次容器日志。 修复 Docker 对应的启动失败原因后重新拉起容器。\n",
+    "expected_fault_type": "container_startup_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Docker"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "容器启动失败排查手册",
+        "source": "docs/knowledge/container_startup_failure.md",
+        "snippet": "日志中的 Docker 指向容器启动后异常退出，可能是入口脚本、端口、配置或资源限制问题。 围绕 Docker 查看容器退出码、启动命令、环境变量和最近一次容器日志。 修复 Docker 对应的启动失败原因后重新拉起容器。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Docker"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_docker_port_allocated",
+    "name": "Docker 端口映射冲突报告评估",
+    "input_summary": "Docker failed to start: port is already allocated for 0.0.0.0:8080.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：port_conflict\n- 严重等级：中\n- 影响组件：Web 服务端口\n- 简要说明：port is already allocated 导致当前服务诊断为 Docker 端口映射冲突外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：port is already allocated\n- 输入摘要：Docker failed to start: port is already allocated for 0.0.0.0:8080.\n\n## 3. 可能原因分析\n- 日志中的 port is already allocated 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。\n\n## 4. 建议排查步骤\n- 围绕 port is already allocated 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。\n\n## 5. 修复建议\n- 处理 port is already allocated 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n\n## 6. 后续预防建议\n- 统一维护端口规划，并在发布前增加端口占用检查。\n\n## 7. 参考知识\n- 端口冲突排查手册：日志中的 port is already allocated 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 port is already allocated 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 port is already allocated 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n",
+    "expected_fault_type": "port_conflict",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "port is already allocated"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "端口冲突排查手册",
+        "source": "docs/knowledge/port_conflict.md",
+        "snippet": "日志中的 port is already allocated 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 port is already allocated 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 port is already allocated 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。"
+      }
+    ],
+    "required_grounding_terms": [
+      "port is already allocated"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_docker_permission_denied",
+    "name": "Docker 权限拒绝报告评估",
+    "input_summary": "Docker error: permission denied while connecting to daemon socket.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：permission_and_auth\n- 严重等级：中\n- 影响组件：认证授权\n- 简要说明：permission denied 导致当前服务诊断为 Docker 权限拒绝外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：permission denied\n- 输入摘要：Docker error: permission denied while connecting to daemon socket.\n\n## 3. 可能原因分析\n- 日志中的 permission denied 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。\n\n## 4. 建议排查步骤\n- 围绕 permission denied 核对调用方身份、权限配置、Token 状态和目标资源策略。\n\n## 5. 修复建议\n- 修复 permission denied 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。\n\n## 6. 后续预防建议\n- 为权限变更增加审批记录、最小权限校验和失败告警。\n\n## 7. 参考知识\n- 权限与认证失败排查手册：日志中的 permission denied 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。 围绕 permission denied 核对调用方身份、权限配置、Token 状态和目标资源策略。 修复 permission denied 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。\n",
+    "expected_fault_type": "permission_and_auth",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "permission denied"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "权限与认证失败排查手册",
+        "source": "docs/knowledge/permission_and_auth.md",
+        "snippet": "日志中的 permission denied 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。 围绕 permission denied 核对调用方身份、权限配置、Token 状态和目标资源策略。 修复 permission denied 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。"
+      }
+    ],
+    "required_grounding_terms": [
+      "permission denied"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_disk_no_space",
+    "name": "磁盘空间不足报告评估",
+    "input_summary": "ERROR failed to write log file: No space left on device.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：disk_and_filesystem\n- 严重等级：中\n- 影响组件：磁盘和文件系统\n- 简要说明：No space left on device 导致当前服务诊断为 磁盘空间不足外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：No space left on device\n- 输入摘要：ERROR failed to write log file: No space left on device.\n\n## 3. 可能原因分析\n- 日志中的 No space left on device 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。\n\n## 4. 建议排查步骤\n- 围绕 No space left on device 检查磁盘使用率、inode、挂载状态和应用写入路径。\n\n## 5. 修复建议\n- 处理 No space left on device 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n\n## 6. 后续预防建议\n- 建立磁盘容量、inode 和只读挂载告警。\n\n## 7. 参考知识\n- 磁盘与文件系统排查手册：日志中的 No space left on device 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 No space left on device 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 No space left on device 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "No space left on device"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "磁盘与文件系统排查手册",
+        "source": "docs/knowledge/disk_and_filesystem.md",
+        "snippet": "日志中的 No space left on device 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 No space left on device 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 No space left on device 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。"
+      }
+    ],
+    "required_grounding_terms": [
+      "No space left on device"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_disk_readonly",
+    "name": "文件系统只读报告评估",
+    "input_summary": "ERROR failed to write data: Read-only file system.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：disk_and_filesystem\n- 严重等级：中\n- 影响组件：磁盘和文件系统\n- 简要说明：Read-only file system 导致当前服务诊断为 文件系统只读外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Read-only file system\n- 输入摘要：ERROR failed to write data: Read-only file system.\n\n## 3. 可能原因分析\n- 日志中的 Read-only file system 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。\n\n## 4. 建议排查步骤\n- 围绕 Read-only file system 检查磁盘使用率、inode、挂载状态和应用写入路径。\n\n## 5. 修复建议\n- 处理 Read-only file system 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n\n## 6. 后续预防建议\n- 建立磁盘容量、inode 和只读挂载告警。\n\n## 7. 参考知识\n- 磁盘与文件系统排查手册：日志中的 Read-only file system 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 Read-only file system 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 Read-only file system 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Read-only file system"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "磁盘与文件系统排查手册",
+        "source": "docs/knowledge/disk_and_filesystem.md",
+        "snippet": "日志中的 Read-only file system 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 Read-only file system 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 Read-only file system 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Read-only file system"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_disk_quota",
+    "name": "磁盘配额耗尽报告评估",
+    "input_summary": "ERROR upload failed: disk quota exceeded for application directory.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：disk_and_filesystem\n- 严重等级：中\n- 影响组件：磁盘和文件系统\n- 简要说明：disk quota exceeded 导致当前服务诊断为 磁盘配额耗尽外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：disk quota exceeded\n- 输入摘要：ERROR upload failed: disk quota exceeded for application directory.\n\n## 3. 可能原因分析\n- 日志中的 disk quota exceeded 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。\n\n## 4. 建议排查步骤\n- 围绕 disk quota exceeded 检查磁盘使用率、inode、挂载状态和应用写入路径。\n\n## 5. 修复建议\n- 处理 disk quota exceeded 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n\n## 6. 后续预防建议\n- 建立磁盘容量、inode 和只读挂载告警。\n\n## 7. 参考知识\n- 磁盘与文件系统排查手册：日志中的 disk quota exceeded 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 disk quota exceeded 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 disk quota exceeded 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "disk quota exceeded"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "磁盘与文件系统排查手册",
+        "source": "docs/knowledge/disk_and_filesystem.md",
+        "snippet": "日志中的 disk quota exceeded 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 disk quota exceeded 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 disk quota exceeded 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。"
+      }
+    ],
+    "required_grounding_terms": [
+      "disk quota exceeded"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_disk_usage_high",
+    "name": "磁盘使用率过高报告评估",
+    "input_summary": "WARN disk usage reached 98 percent and application failed to write logs.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：disk_and_filesystem\n- 严重等级：中\n- 影响组件：磁盘和文件系统\n- 简要说明：disk usage 导致当前服务诊断为 磁盘使用率过高外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：disk usage\n- 输入摘要：WARN disk usage reached 98 percent and application failed to write logs.\n\n## 3. 可能原因分析\n- 日志中的 disk usage 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。\n\n## 4. 建议排查步骤\n- 围绕 disk usage 检查磁盘使用率、inode、挂载状态和应用写入路径。\n\n## 5. 修复建议\n- 处理 disk usage 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n\n## 6. 后续预防建议\n- 建立磁盘容量、inode 和只读挂载告警。\n\n## 7. 参考知识\n- 磁盘与文件系统排查手册：日志中的 disk usage 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 disk usage 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 disk usage 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。\n",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "disk usage"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "磁盘与文件系统排查手册",
+        "source": "docs/knowledge/disk_and_filesystem.md",
+        "snippet": "日志中的 disk usage 指向磁盘或文件系统异常，可能是空间不足、只读挂载或配额耗尽。 围绕 disk usage 检查磁盘使用率、inode、挂载状态和应用写入路径。 处理 disk usage 对应的磁盘问题，可以清理空间、扩容或修复挂载状态。"
+      }
+    ],
+    "required_grounding_terms": [
+      "disk usage"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_dns_lookup_failed",
+    "name": "DNS 解析失败报告评估",
+    "input_summary": "DNS lookup failed for service payment: name or service not known.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：tls_dns_network\n- 严重等级：中\n- 影响组件：网络访问\n- 简要说明：DNS lookup failed 导致当前服务诊断为 DNS 解析失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：DNS lookup failed\n- 输入摘要：DNS lookup failed for service payment: name or service not known.\n\n## 3. 可能原因分析\n- 日志中的 DNS lookup failed 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。\n\n## 4. 建议排查步骤\n- 围绕 DNS lookup failed 检查证书链、DNS 解析结果、网络策略和目标服务可达性。\n\n## 5. 修复建议\n- 修复 DNS lookup failed 对应的证书、域名或网络配置后重试调用。\n\n## 6. 后续预防建议\n- 为证书有效期、DNS 解析和网络连通性增加巡检。\n\n## 7. 参考知识\n- TLS、DNS 与网络排查手册：日志中的 DNS lookup failed 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。 围绕 DNS lookup failed 检查证书链、DNS 解析结果、网络策略和目标服务可达性。 修复 DNS lookup failed 对应的证书、域名或网络配置后重试调用。\n",
+    "expected_fault_type": "tls_dns_network",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "DNS lookup failed"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "TLS、DNS 与网络排查手册",
+        "source": "docs/knowledge/tls_dns_network.md",
+        "snippet": "日志中的 DNS lookup failed 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。 围绕 DNS lookup failed 检查证书链、DNS 解析结果、网络策略和目标服务可达性。 修复 DNS lookup failed 对应的证书、域名或网络配置后重试调用。"
+      }
+    ],
+    "required_grounding_terms": [
+      "DNS lookup failed"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_tls_certificate_verify",
+    "name": "TLS 证书校验失败报告评估",
+    "input_summary": "SSL handshake failed: certificate verify failed while calling upstream API.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：tls_dns_network\n- 严重等级：中\n- 影响组件：网络访问\n- 简要说明：SSL handshake 导致当前服务诊断为 TLS 证书校验失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：SSL handshake\n- 输入摘要：SSL handshake failed: certificate verify failed while calling upstream API.\n\n## 3. 可能原因分析\n- 日志中的 SSL handshake 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。\n\n## 4. 建议排查步骤\n- 围绕 SSL handshake 检查证书链、DNS 解析结果、网络策略和目标服务可达性。\n\n## 5. 修复建议\n- 修复 SSL handshake 对应的证书、域名或网络配置后重试调用。\n\n## 6. 后续预防建议\n- 为证书有效期、DNS 解析和网络连通性增加巡检。\n\n## 7. 参考知识\n- TLS、DNS 与网络排查手册：日志中的 SSL handshake 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。 围绕 SSL handshake 检查证书链、DNS 解析结果、网络策略和目标服务可达性。 修复 SSL handshake 对应的证书、域名或网络配置后重试调用。\n",
+    "expected_fault_type": "tls_dns_network",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "SSL handshake"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "TLS、DNS 与网络排查手册",
+        "source": "docs/knowledge/tls_dns_network.md",
+        "snippet": "日志中的 SSL handshake 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。 围绕 SSL handshake 检查证书链、DNS 解析结果、网络策略和目标服务可达性。 修复 SSL handshake 对应的证书、域名或网络配置后重试调用。"
+      }
+    ],
+    "required_grounding_terms": [
+      "SSL handshake"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_tls_handshake_failed",
+    "name": "TLS 握手失败报告评估",
+    "input_summary": "tls handshake failed when connecting to internal gateway.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：tls_dns_network\n- 严重等级：中\n- 影响组件：网络访问\n- 简要说明：tls handshake failed 导致当前服务诊断为 TLS 握手失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：tls handshake failed\n- 输入摘要：tls handshake failed when connecting to internal gateway.\n\n## 3. 可能原因分析\n- 日志中的 tls handshake failed 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。\n\n## 4. 建议排查步骤\n- 围绕 tls handshake failed 检查证书链、DNS 解析结果、网络策略和目标服务可达性。\n\n## 5. 修复建议\n- 修复 tls handshake failed 对应的证书、域名或网络配置后重试调用。\n\n## 6. 后续预防建议\n- 为证书有效期、DNS 解析和网络连通性增加巡检。\n\n## 7. 参考知识\n- TLS、DNS 与网络排查手册：日志中的 tls handshake failed 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。 围绕 tls handshake failed 检查证书链、DNS 解析结果、网络策略和目标服务可达性。 修复 tls handshake failed 对应的证书、域名或网络配置后重试调用。\n",
+    "expected_fault_type": "tls_dns_network",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "tls handshake failed"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "TLS、DNS 与网络排查手册",
+        "source": "docs/knowledge/tls_dns_network.md",
+        "snippet": "日志中的 tls handshake failed 指向 TLS、DNS 或基础网络异常，可能是证书、域名解析或网络策略问题。 围绕 tls handshake failed 检查证书链、DNS 解析结果、网络策略和目标服务可达性。 修复 tls handshake failed 对应的证书、域名或网络配置后重试调用。"
+      }
+    ],
+    "required_grounding_terms": [
+      "tls handshake failed"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_network_io_timeout",
+    "name": "网络 IO 超时报告评估",
+    "input_summary": "java.net.SocketTimeoutException: Read timed out while calling remote service.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：timeout\n- 严重等级：中\n- 影响组件：远程调用\n- 简要说明：Read timed out 导致当前服务诊断为 网络 IO 超时外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Read timed out\n- 输入摘要：java.net.SocketTimeoutException: Read timed out while calling remote service.\n\n## 3. 可能原因分析\n- 日志中的 Read timed out 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。\n\n## 4. 建议排查步骤\n- 围绕 Read timed out 检查调用链耗时、下游负载、网络延迟和客户端超时配置。\n\n## 5. 修复建议\n- 处理 Read timed out 对应的慢依赖或调整合理的超时、重试和降级策略。\n\n## 6. 后续预防建议\n- 增加 p95 延迟告警、依赖治理和超时参数基线。\n\n## 7. 参考知识\n- 超时问题排查手册：日志中的 Read timed out 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。 围绕 Read timed out 检查调用链耗时、下游负载、网络延迟和客户端超时配置。 处理 Read timed out 对应的慢依赖或调整合理的超时、重试和降级策略。\n",
+    "expected_fault_type": "timeout",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Read timed out"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "超时问题排查手册",
+        "source": "docs/knowledge/timeout.md",
+        "snippet": "日志中的 Read timed out 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。 围绕 Read timed out 检查调用链耗时、下游负载、网络延迟和客户端超时配置。 处理 Read timed out 对应的慢依赖或调整合理的超时、重试和降级策略。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Read timed out"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_redis_connection_refused",
+    "name": "Redis 连接拒绝报告评估",
+    "input_summary": "Redis connection failed: connection refused to 10.0.0.15:6379.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：connection_failure\n- 严重等级：中\n- 影响组件：下游连接\n- 简要说明：connection refused 导致当前服务诊断为 Redis 连接拒绝外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：connection refused\n- 输入摘要：Redis connection failed: connection refused to 10.0.0.15:6379.\n\n## 3. 可能原因分析\n- 日志中的 connection refused 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。\n\n## 4. 建议排查步骤\n- 围绕 connection refused 检查下游存活状态、网络连通性、连接池配置和账号权限。\n\n## 5. 修复建议\n- 恢复 connection refused 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n\n## 6. 后续预防建议\n- 为核心依赖增加健康检查、连接失败告警和降级策略。\n\n## 7. 参考知识\n- 连接失败排查手册：日志中的 connection refused 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 connection refused 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 connection refused 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n",
+    "expected_fault_type": "connection_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "connection refused"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "连接失败排查手册",
+        "source": "docs/knowledge/connection_failure.md",
+        "snippet": "日志中的 connection refused 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 connection refused 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 connection refused 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。"
+      }
+    ],
+    "required_grounding_terms": [
+      "connection refused"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_redis_timeout",
+    "name": "Redis 超时报告评估",
+    "input_summary": "Redis timeout while executing GET session: request timeout after 2000ms.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：connection_failure\n- 严重等级：中\n- 影响组件：下游连接\n- 简要说明：Redis timeout 导致当前服务诊断为 Redis 超时外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Redis timeout\n- 输入摘要：Redis timeout while executing GET session: request timeout after 2000ms.\n\n## 3. 可能原因分析\n- 日志中的 Redis timeout 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。\n\n## 4. 建议排查步骤\n- 围绕 Redis timeout 检查下游存活状态、网络连通性、连接池配置和账号权限。\n\n## 5. 修复建议\n- 恢复 Redis timeout 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n\n## 6. 后续预防建议\n- 为核心依赖增加健康检查、连接失败告警和降级策略。\n\n## 7. 参考知识\n- 连接失败排查手册：日志中的 Redis timeout 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 Redis timeout 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 Redis timeout 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。\n",
+    "expected_fault_type": "connection_failure",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Redis timeout"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "连接失败排查手册",
+        "source": "docs/knowledge/connection_failure.md",
+        "snippet": "日志中的 Redis timeout 指向应用无法连接下游服务，可能是地址错误、服务未启动、防火墙或认证信息异常。 围绕 Redis timeout 检查下游存活状态、网络连通性、连接池配置和账号权限。 恢复 Redis timeout 对应的下游访问路径，必要时修正地址、端口、账号或连接池参数。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Redis timeout"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_auth_unauthorized",
+    "name": "接口未授权报告评估",
+    "input_summary": "HTTP 401 Unauthorized when calling admin API.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：permission_and_auth\n- 严重等级：中\n- 影响组件：认证授权\n- 简要说明：Unauthorized 导致当前服务诊断为 接口未授权外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Unauthorized\n- 输入摘要：HTTP 401 Unauthorized when calling admin API.\n\n## 3. 可能原因分析\n- 日志中的 Unauthorized 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。\n\n## 4. 建议排查步骤\n- 围绕 Unauthorized 核对调用方身份、权限配置、Token 状态和目标资源策略。\n\n## 5. 修复建议\n- 修复 Unauthorized 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。\n\n## 6. 后续预防建议\n- 为权限变更增加审批记录、最小权限校验和失败告警。\n\n## 7. 参考知识\n- 权限与认证失败排查手册：日志中的 Unauthorized 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。 围绕 Unauthorized 核对调用方身份、权限配置、Token 状态和目标资源策略。 修复 Unauthorized 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。\n",
+    "expected_fault_type": "permission_and_auth",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Unauthorized"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "权限与认证失败排查手册",
+        "source": "docs/knowledge/permission_and_auth.md",
+        "snippet": "日志中的 Unauthorized 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。 围绕 Unauthorized 核对调用方身份、权限配置、Token 状态和目标资源策略。 修复 Unauthorized 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Unauthorized"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_auth_forbidden",
+    "name": "接口禁止访问报告评估",
+    "input_summary": "HTTP 403 Forbidden: access is denied for current user.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：permission_and_auth\n- 严重等级：中\n- 影响组件：认证授权\n- 简要说明：Forbidden 导致当前服务诊断为 接口禁止访问外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Forbidden\n- 输入摘要：HTTP 403 Forbidden: access is denied for current user.\n\n## 3. 可能原因分析\n- 日志中的 Forbidden 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。\n\n## 4. 建议排查步骤\n- 围绕 Forbidden 核对调用方身份、权限配置、Token 状态和目标资源策略。\n\n## 5. 修复建议\n- 修复 Forbidden 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。\n\n## 6. 后续预防建议\n- 为权限变更增加审批记录、最小权限校验和失败告警。\n\n## 7. 参考知识\n- 权限与认证失败排查手册：日志中的 Forbidden 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。 围绕 Forbidden 核对调用方身份、权限配置、Token 状态和目标资源策略。 修复 Forbidden 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。\n",
+    "expected_fault_type": "permission_and_auth",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Forbidden"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "权限与认证失败排查手册",
+        "source": "docs/knowledge/permission_and_auth.md",
+        "snippet": "日志中的 Forbidden 指向认证或授权失败，可能是账号密码、Token、角色权限或访问策略不匹配。 围绕 Forbidden 核对调用方身份、权限配置、Token 状态和目标资源策略。 修复 Forbidden 对应的认证凭据或授权规则，并避免在日志中暴露敏感信息。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Forbidden"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_config_invalid_property",
+    "name": "配置项无效报告评估",
+    "input_summary": "Application failed to start because configuration property app.timeout is invalid.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：configuration_error\n- 严重等级：中\n- 影响组件：应用配置\n- 简要说明：configuration property 导致当前服务诊断为 配置项无效外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：configuration property\n- 输入摘要：Application failed to start because configuration property app.timeout is invalid.\n\n## 3. 可能原因分析\n- 日志中的 configuration property 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。\n\n## 4. 建议排查步骤\n- 围绕 configuration property 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。\n\n## 5. 修复建议\n- 修正 configuration property 对应配置后重新发布，并在启动阶段加入配置校验。\n\n## 6. 后续预防建议\n- 为关键配置增加模板、默认值说明和发布前校验。\n\n## 7. 参考知识\n- 配置错误排查手册：日志中的 configuration property 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 configuration property 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 configuration property 对应配置后重新发布，并在启动阶段加入配置校验。\n",
+    "expected_fault_type": "configuration_error",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "configuration property"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "配置错误排查手册",
+        "source": "docs/knowledge/configuration_error.md",
+        "snippet": "日志中的 configuration property 指向配置解析或绑定失败，常见原因是环境变量缺失、配置项名称错误或格式不合法。 围绕 configuration property 核对环境变量、配置文件和启动参数，确认线上实际加载的配置值。 修正 configuration property 对应配置后重新发布，并在启动阶段加入配置校验。"
+      }
+    ],
+    "required_grounding_terms": [
+      "configuration property"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_timeout_connect",
+    "name": "连接超时报告评估",
+    "input_summary": "connect timed out while opening socket to inventory service.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：timeout\n- 严重等级：中\n- 影响组件：远程调用\n- 简要说明：connect timed out 导致当前服务诊断为 连接超时外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：connect timed out\n- 输入摘要：connect timed out while opening socket to inventory service.\n\n## 3. 可能原因分析\n- 日志中的 connect timed out 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。\n\n## 4. 建议排查步骤\n- 围绕 connect timed out 检查调用链耗时、下游负载、网络延迟和客户端超时配置。\n\n## 5. 修复建议\n- 处理 connect timed out 对应的慢依赖或调整合理的超时、重试和降级策略。\n\n## 6. 后续预防建议\n- 增加 p95 延迟告警、依赖治理和超时参数基线。\n\n## 7. 参考知识\n- 超时问题排查手册：日志中的 connect timed out 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。 围绕 connect timed out 检查调用链耗时、下游负载、网络延迟和客户端超时配置。 处理 connect timed out 对应的慢依赖或调整合理的超时、重试和降级策略。\n",
+    "expected_fault_type": "timeout",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "connect timed out"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "超时问题排查手册",
+        "source": "docs/knowledge/timeout.md",
+        "snippet": "日志中的 connect timed out 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。 围绕 connect timed out 检查调用链耗时、下游负载、网络延迟和客户端超时配置。 处理 connect timed out 对应的慢依赖或调整合理的超时、重试和降级策略。"
+      }
+    ],
+    "required_grounding_terms": [
+      "connect timed out"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_timeout_request",
+    "name": "请求超时报告评估",
+    "input_summary": "request timeout after 30000ms when calling downstream service.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：timeout\n- 严重等级：中\n- 影响组件：远程调用\n- 简要说明：request timeout 导致当前服务诊断为 请求超时外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：request timeout\n- 输入摘要：request timeout after 30000ms when calling downstream service.\n\n## 3. 可能原因分析\n- 日志中的 request timeout 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。\n\n## 4. 建议排查步骤\n- 围绕 request timeout 检查调用链耗时、下游负载、网络延迟和客户端超时配置。\n\n## 5. 修复建议\n- 处理 request timeout 对应的慢依赖或调整合理的超时、重试和降级策略。\n\n## 6. 后续预防建议\n- 增加 p95 延迟告警、依赖治理和超时参数基线。\n\n## 7. 参考知识\n- 超时问题排查手册：日志中的 request timeout 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。 围绕 request timeout 检查调用链耗时、下游负载、网络延迟和客户端超时配置。 处理 request timeout 对应的慢依赖或调整合理的超时、重试和降级策略。\n",
+    "expected_fault_type": "timeout",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "request timeout"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "超时问题排查手册",
+        "source": "docs/knowledge/timeout.md",
+        "snippet": "日志中的 request timeout 指向请求等待超过阈值，可能是下游变慢、网络抖动或超时配置不合理。 围绕 request timeout 检查调用链耗时、下游负载、网络延迟和客户端超时配置。 处理 request timeout 对应的慢依赖或调整合理的超时、重试和降级策略。"
+      }
+    ],
+    "required_grounding_terms": [
+      "request timeout"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  },
+  {
+    "id": "report_port_tomcat_bind",
+    "name": "Tomcat 端口绑定失败报告评估",
+    "input_summary": "Tomcat failed to start: java.net.BindException Address already in use: bind.",
+    "report_markdown": "## 1. 问题概述\n- 故障类型：port_conflict\n- 严重等级：中\n- 影响组件：Web 服务端口\n- 简要说明：Address already in use 导致当前服务诊断为 Tomcat 端口绑定失败外部案例。\n\n## 2. 关键信息提取\n- 关键日志证据：Address already in use\n- 输入摘要：Tomcat failed to start: java.net.BindException Address already in use: bind.\n\n## 3. 可能原因分析\n- 日志中的 Address already in use 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。\n\n## 4. 建议排查步骤\n- 围绕 Address already in use 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。\n\n## 5. 修复建议\n- 处理 Address already in use 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n\n## 6. 后续预防建议\n- 统一维护端口规划，并在发布前增加端口占用检查。\n\n## 7. 参考知识\n- 端口冲突排查手册：日志中的 Address already in use 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 Address already in use 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 Address already in use 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。\n",
+    "expected_fault_type": "port_conflict",
+    "expected_min_severity": "medium",
+    "required_evidence": [
+      "Address already in use"
+    ],
+    "knowledge_refs": [
+      {
+        "title": "端口冲突排查手册",
+        "source": "docs/knowledge/port_conflict.md",
+        "snippet": "日志中的 Address already in use 指向端口绑定失败，常见原因是旧进程、容器映射或本机服务占用了目标端口。 围绕 Address already in use 检查监听进程、服务启动参数和容器端口映射，确认冲突来源。 处理 Address already in use 对应的端口占用后重启服务，可以释放占用进程或调整服务端口配置。"
+      }
+    ],
+    "required_grounding_terms": [
+      "Address already in use"
+    ],
+    "min_key_evidence": 1,
+    "min_possible_causes": 1,
+    "min_troubleshooting_steps": 1,
+    "min_fix_suggestions": 1,
+    "min_prevention_suggestions": 1
+  }
+]

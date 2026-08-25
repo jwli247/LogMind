@@ -1,0 +1,522 @@
+[
+  {
+    "id": "external_spring_boot_port_conflict",
+    "name": "Spring Boot 端口占用外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.spring.io/spring-boot/reference/web/web-server.html",
+    "annotation_note": "根据Spring Boot 端口占用场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "APPLICATION FAILED TO START. Web server failed to start. Port 8080 was already in use.",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Port 8080"
+    ]
+  },
+  {
+    "id": "external_spring_boot_config_placeholder",
+    "name": "Spring Boot 配置占位符缺失外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.spring.io/spring-boot/reference/features/external-config.html",
+    "annotation_note": "根据Spring Boot 配置占位符缺失场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Could not resolve placeholder DB_HOST. Application failed to start.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Could not resolve placeholder"
+    ]
+  },
+  {
+    "id": "external_spring_boot_bind_properties",
+    "name": "Spring Boot 配置绑定失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.spring.io/spring-boot/reference/features/external-config.html",
+    "annotation_note": "根据Spring Boot 配置绑定失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Failed to bind properties under spring.datasource.url. Configuration property is invalid.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Failed to bind properties"
+    ]
+  },
+  {
+    "id": "external_spring_boot_null_pointer",
+    "name": "Spring Boot 空指针异常外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.oracle.com/javase/8/docs/api/java/lang/NullPointerException.html",
+    "annotation_note": "根据Spring Boot 空指针异常场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "java.lang.NullPointerException: Cannot invoke service because repository is null",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "NullPointerException"
+    ]
+  },
+  {
+    "id": "external_mysql_access_denied",
+    "name": "MySQL 认证失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://dev.mysql.com/doc/refman/8.4/en/problems-connecting.html",
+    "annotation_note": "根据MySQL 认证失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "java.sql.SQLException: Access denied for user app_user while connecting to MySQL.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Access denied for user"
+    ]
+  },
+  {
+    "id": "external_mysql_communications_link",
+    "name": "MySQL 链路失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://dev.mysql.com/doc/refman/8.4/en/problems-connecting.html",
+    "annotation_note": "根据MySQL 链路失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Communications link failure to database.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Communications link failure"
+    ]
+  },
+  {
+    "id": "external_mysql_slow_query",
+    "name": "MySQL 慢查询外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://dev.mysql.com/doc/refman/8.4/en/slow-query-log.html",
+    "annotation_note": "根据MySQL 慢查询场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Slow query detected: SELECT * FROM orders took 18.5s rows_examined=1200000.",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Slow query"
+    ]
+  },
+  {
+    "id": "external_mysql_sql_syntax_error",
+    "name": "SQL 语法错误外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://dev.mysql.com/doc/refman/8.4/en/problems-with-mysql.html",
+    "annotation_note": "根据SQL 语法错误场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax near from order.",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "SQLSyntaxErrorException"
+    ]
+  },
+  {
+    "id": "external_nginx_502",
+    "name": "Nginx 502外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+    "annotation_note": "根据Nginx 502场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Nginx 502 Bad Gateway: upstream prematurely closed connection while reading response header from upstream.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "502 Bad Gateway"
+    ]
+  },
+  {
+    "id": "external_nginx_504_timeout",
+    "name": "Nginx 504 超时外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+    "annotation_note": "根据Nginx 504 超时场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Nginx error: upstream timed out while reading response header, returned 504 gateway timeout.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "upstream timed out"
+    ]
+  },
+  {
+    "id": "external_nginx_connect_failed",
+    "name": "Nginx upstream 连接失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+    "annotation_note": "根据Nginx upstream 连接失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Nginx connect() failed while connecting to upstream, returned 502 bad gateway.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "connect() failed"
+    ]
+  },
+  {
+    "id": "external_nginx_port_bind",
+    "name": "Nginx 端口绑定失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://nginx.org/en/docs/beginners_guide.html",
+    "annotation_note": "根据Nginx 端口绑定失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "nginx bind failed: Address already in use.",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Address already in use"
+    ]
+  },
+  {
+    "id": "external_java_oom_heap",
+    "name": "Java 堆内存溢出外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/memleaks002.html",
+    "annotation_note": "根据Java 堆内存溢出场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Exception in thread main java.lang.OutOfMemoryError: Java heap space",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "OutOfMemoryError"
+    ]
+  },
+  {
+    "id": "external_java_gc_overhead",
+    "name": "Java GC 开销超限外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/memleaks002.html",
+    "annotation_note": "根据Java GC 开销超限场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "java.lang.OutOfMemoryError: GC overhead limit exceeded",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "GC overhead limit exceeded"
+    ]
+  },
+  {
+    "id": "external_java_metaspace",
+    "name": "Java Metaspace 溢出外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/memleaks002.html",
+    "annotation_note": "根据Java Metaspace 溢出场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "java.lang.OutOfMemoryError: Metaspace while loading classes",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Metaspace"
+    ]
+  },
+  {
+    "id": "external_linux_too_many_files",
+    "name": "Linux 文件句柄耗尽外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://man7.org/linux/man-pages/man2/open.2.html",
+    "annotation_note": "根据Linux 文件句柄耗尽场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "ERROR java.io.IOException: too many open files while accepting socket",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "too many open files"
+    ]
+  },
+  {
+    "id": "external_kubernetes_crashloopbackoff",
+    "name": "Kubernetes CrashLoopBackOff外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+    "annotation_note": "根据Kubernetes CrashLoopBackOff场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "kubectl get pods shows app in CrashLoopBackOff. Back-off restarting failed container.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "CrashLoopBackOff"
+    ]
+  },
+  {
+    "id": "external_kubernetes_imagepullbackoff",
+    "name": "Kubernetes ImagePullBackOff外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://kubernetes.io/docs/concepts/containers/images/",
+    "annotation_note": "根据Kubernetes ImagePullBackOff场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Pod failed to start: ImagePullBackOff while pulling image.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "ImagePullBackOff"
+    ]
+  },
+  {
+    "id": "external_kubernetes_readiness_probe",
+    "name": "Kubernetes 探针失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+    "annotation_note": "根据Kubernetes 探针失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Pod failed readiness probe failed and kubelet keeps restarting the container.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "readiness probe failed"
+    ]
+  },
+  {
+    "id": "external_kubernetes_oomkilled",
+    "name": "Kubernetes OOMKilled外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+    "annotation_note": "根据Kubernetes OOMKilled场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Pod failed with reason OOMKilled after memory limit was exceeded.",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "OOMKilled"
+    ]
+  },
+  {
+    "id": "external_docker_container_exited",
+    "name": "Docker 容器退出外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.docker.com/reference/cli/docker/container/run/",
+    "annotation_note": "根据Docker 容器退出场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Docker container exited with code 137 immediately after startup.",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Docker"
+    ]
+  },
+  {
+    "id": "external_docker_entrypoint_failed",
+    "name": "Docker Entrypoint 失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.docker.com/reference/dockerfile/",
+    "annotation_note": "根据Docker Entrypoint 失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Docker container startup failed because entrypoint script returned error.",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Docker"
+    ]
+  },
+  {
+    "id": "external_docker_port_allocated",
+    "name": "Docker 端口映射冲突外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.docker.com/reference/cli/docker/container/run/",
+    "annotation_note": "根据Docker 端口映射冲突场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Docker failed to start: port is already allocated for 0.0.0.0:8080.",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "port is already allocated"
+    ]
+  },
+  {
+    "id": "external_docker_permission_denied",
+    "name": "Docker 权限拒绝外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.docker.com/engine/install/linux-postinstall/",
+    "annotation_note": "根据Docker 权限拒绝场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Docker error: permission denied while connecting to daemon socket.",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "permission denied"
+    ]
+  },
+  {
+    "id": "external_disk_no_space",
+    "name": "磁盘空间不足外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://www.kernel.org/doc/html/latest/filesystems/index.html",
+    "annotation_note": "根据磁盘空间不足场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "ERROR failed to write log file: No space left on device.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "No space left on device"
+    ]
+  },
+  {
+    "id": "external_disk_readonly",
+    "name": "文件系统只读外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://www.kernel.org/doc/html/latest/filesystems/index.html",
+    "annotation_note": "根据文件系统只读场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "ERROR failed to write data: Read-only file system.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Read-only file system"
+    ]
+  },
+  {
+    "id": "external_disk_quota",
+    "name": "磁盘配额耗尽外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://www.kernel.org/doc/html/latest/filesystems/index.html",
+    "annotation_note": "根据磁盘配额耗尽场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "ERROR upload failed: disk quota exceeded for application directory.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "disk quota exceeded"
+    ]
+  },
+  {
+    "id": "external_disk_usage_high",
+    "name": "磁盘使用率过高外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://www.kernel.org/doc/html/latest/admin-guide/index.html",
+    "annotation_note": "根据磁盘使用率过高场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "WARN disk usage reached 98 percent and application failed to write logs.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "disk usage"
+    ]
+  },
+  {
+    "id": "external_dns_lookup_failed",
+    "name": "DNS 解析失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/",
+    "annotation_note": "根据DNS 解析失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "DNS lookup failed for service payment: name or service not known.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "DNS lookup failed"
+    ]
+  },
+  {
+    "id": "external_tls_certificate_verify",
+    "name": "TLS 证书校验失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://www.openssl.org/docs/",
+    "annotation_note": "根据TLS 证书校验失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "SSL handshake failed: certificate verify failed while calling upstream API.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "SSL handshake"
+    ]
+  },
+  {
+    "id": "external_tls_handshake_failed",
+    "name": "TLS 握手失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://www.openssl.org/docs/",
+    "annotation_note": "根据TLS 握手失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "tls handshake failed when connecting to internal gateway.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "tls handshake failed"
+    ]
+  },
+  {
+    "id": "external_network_io_timeout",
+    "name": "网络 IO 超时外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.oracle.com/javase/8/docs/api/java/net/SocketTimeoutException.html",
+    "annotation_note": "根据网络 IO 超时场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "java.net.SocketTimeoutException: Read timed out while calling remote service.",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Read timed out"
+    ]
+  },
+  {
+    "id": "external_redis_connection_refused",
+    "name": "Redis 连接拒绝外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://redis.io/docs/latest/develop/clients/",
+    "annotation_note": "根据Redis 连接拒绝场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Redis connection failed: connection refused to 10.0.0.15:6379.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "connection refused"
+    ]
+  },
+  {
+    "id": "external_redis_timeout",
+    "name": "Redis 超时外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://redis.io/docs/latest/develop/clients/",
+    "annotation_note": "根据Redis 超时场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Redis timeout while executing GET session: request timeout after 2000ms.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Redis timeout"
+    ]
+  },
+  {
+    "id": "external_auth_unauthorized",
+    "name": "接口未授权外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/401",
+    "annotation_note": "根据接口未授权场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "HTTP 401 Unauthorized when calling admin API.",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Unauthorized"
+    ]
+  },
+  {
+    "id": "external_auth_forbidden",
+    "name": "接口禁止访问外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/403",
+    "annotation_note": "根据接口禁止访问场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "HTTP 403 Forbidden: access is denied for current user.",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Forbidden"
+    ]
+  },
+  {
+    "id": "external_config_invalid_property",
+    "name": "配置项无效外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.spring.io/spring-boot/reference/features/external-config.html",
+    "annotation_note": "根据配置项无效场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Application failed to start because configuration property app.timeout is invalid.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "configuration property"
+    ]
+  },
+  {
+    "id": "external_timeout_connect",
+    "name": "连接超时外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://docs.oracle.com/javase/8/docs/api/java/net/SocketTimeoutException.html",
+    "annotation_note": "根据连接超时场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "connect timed out while opening socket to inventory service.",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "connect timed out"
+    ]
+  },
+  {
+    "id": "external_timeout_request",
+    "name": "请求超时外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/504",
+    "annotation_note": "根据请求超时场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "request timeout after 30000ms when calling downstream service.",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "request timeout"
+    ]
+  },
+  {
+    "id": "external_port_tomcat_bind",
+    "name": "Tomcat 端口绑定失败外部案例",
+    "dataset": "External annotated cases",
+    "source_url": "https://tomcat.apache.org/tomcat-10.1-doc/config/http.html",
+    "annotation_note": "根据Tomcat 端口绑定失败场景人工构造脱敏日志，并标注故障类型。",
+    "input_text": "Tomcat failed to start: java.net.BindException Address already in use: bind.",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Address already in use"
+    ]
+  }
+]

@@ -12,11 +12,12 @@ from agents.knowledge_base_agent import kb_agent
 from agents.langgraph_supervisor_agent import langgraph_supervisor_agent
 from agents.langgraph_supervisor_hierarchy_agent import langgraph_supervisor_hierarchy_agent
 from agents.lazy_agent import LazyLoadingAgent
+from agents.logmind import logmind
 from agents.rag_assistant import rag_assistant
 from agents.research_assistant import research_assistant
 from schema import AgentInfo
 
-DEFAULT_AGENT = "research-assistant"
+DEFAULT_AGENT = "logmind"
 
 # Type alias to handle LangGraph's different agent patterns
 # - @entrypoint functions return Pregel
@@ -32,6 +33,10 @@ class Agent:
 
 
 agents: dict[str, Agent] = {
+    "logmind": Agent(
+        description="智能日志分析与运维排障 Agent，支持异常堆栈解析、故障原因分析和修复建议生成。",
+        graph_like=logmind,
+    ),
     "chatbot": Agent(description="A simple chatbot.", graph_like=chatbot),
     "research-assistant": Agent(
         description="A research assistant with web search and calculator.",

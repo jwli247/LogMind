@@ -1,0 +1,40 @@
+[
+  {
+    "id": "golden_port_conflict_8080",
+    "name": "端口冲突真实生成样例回放",
+    "input_text": "Web server failed to start. Port 8080 was already in use. APPLICATION FAILED TO START.",
+    "expected_fault_type": "port_conflict",
+    "expected_min_severity": "medium",
+    "required_input_evidence": ["Port 8080", "already in use"],
+    "required_report_evidence": ["Port 8080", "already in use"],
+    "required_grounding_terms": ["8080", "server.port"],
+    "knowledge_refs": [
+      {
+        "title": "端口冲突排查手册",
+        "source": "docs/knowledge/port_conflict.md",
+        "snippet": "先确认端口占用进程，再选择释放端口或调整配置；必要时修改 server.port。"
+      }
+    ],
+    "expected_min_quality_score": 90,
+    "generated_report_markdown": "## 1. 问题概述\n- 故障类型：端口冲突\n- 严重等级：中\n- 影响组件：Spring Boot Web Server\n- 简要说明：Web 服务启动失败，8080 端口已被占用。\n\n## 2. 关键信息提取\n- Web server failed to start.\n- Port 8080 was already in use.\n- APPLICATION FAILED TO START.\n\n## 3. 可能原因分析\n- 本机已有旧的 Web 服务实例监听 8080 端口。\n- 其他进程占用了 Spring Boot 当前配置的服务端口。\n\n## 4. 建议排查步骤\n- 执行 `netstat -ano | findstr :8080` 查看端口占用进程。\n- 根据 PID 使用任务管理器或 `tasklist` 确认进程来源。\n- 确认该进程是否属于当前项目旧实例或其他业务服务。\n\n## 5. 修复建议\n- 如果是旧实例，停止对应进程后重新启动服务。\n- 如果端口需要保留给其他服务，修改当前应用的 `server.port`。\n\n## 6. 后续预防建议\n- 为本地、测试和生产环境分别规划端口使用表。\n- 启动脚本中增加端口占用预检查，提前给出清晰提示。\n\n## 7. 参考知识\n- 端口冲突排查手册：先确认端口占用进程，再选择释放端口或调整配置。"
+  },
+  {
+    "id": "golden_slow_query_orders",
+    "name": "数据库慢查询真实生成样例回放",
+    "input_text": "MySQL slow query detected: SELECT * FROM orders took 18.5s, rows_examined=2500000.",
+    "expected_fault_type": "database_slow_query",
+    "expected_min_severity": "medium",
+    "required_input_evidence": ["slow query", "rows_examined"],
+    "required_report_evidence": ["slow query", "rows_examined"],
+    "required_grounding_terms": ["slow query", "rows_examined", "索引"],
+    "knowledge_refs": [
+      {
+        "title": "数据库慢查询排查手册",
+        "source": "docs/knowledge/database_slow_query.md",
+        "snippet": "先看执行计划、扫描行数和索引命中，再调整 SQL 与索引。"
+      }
+    ],
+    "expected_min_quality_score": 85,
+    "generated_report_markdown": "## 1. 问题概述\n- 故障类型：数据库慢查询\n- 严重等级：中\n- 影响组件：MySQL orders 查询\n- 简要说明：orders 表查询耗时 18.5 秒，并扫描了大量行，疑似缺少筛选条件或索引。\n\n## 2. 关键信息提取\n- MySQL slow query detected.\n- SELECT * FROM orders took 18.5s.\n- rows_examined=2500000.\n\n## 3. 可能原因分析\n- 该 slow query 使用 `SELECT *` 且缺少有效过滤条件，导致扫描行数过大。\n- rows_examined=2500000 表明查询扫描了大量记录，orders 表相关查询字段可能缺少合适索引。\n- 表数据量增长后，原有查询计划不再适合当前数据分布。\n\n## 4. 建议排查步骤\n- 使用 `EXPLAIN` 查看该 SQL 的执行计划和索引命中情况。\n- 检查慢查询日志中同类 slow query 的频率和峰值耗时。\n- 结合业务条件确认是否可以增加分页、时间范围或状态过滤。\n\n## 5. 修复建议\n- 为高频过滤字段建立合适索引，并避免无条件全表扫描。\n- 将 `SELECT *` 改为只查询必要字段。\n- 对大结果集增加分页或异步导出流程。\n\n## 6. 后续预防建议\n- 为核心 SQL 建立慢查询阈值告警。\n- 上线前对大表查询进行执行计划检查和压测。\n\n## 7. 参考知识\n- 数据库慢查询排查手册：先看执行计划、扫描行数和索引命中，再调整 SQL 与索引。"
+  }
+]

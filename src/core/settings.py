@@ -101,6 +101,19 @@ class Settings(BaseSettings):
     COMPATIBLE_API_KEY: SecretStr | None = None
     COMPATIBLE_BASE_URL: str | None = None
 
+    # Embedding model configuration for RAG. This is intentionally separate from
+    # chat model settings because many providers expose chat models and embedding
+    # models through different accounts or base URLs.
+    EMBEDDING_PROVIDER: str | None = None
+    EMBEDDING_MODEL: str | None = None
+    EMBEDDING_API_KEY: SecretStr | None = None
+    EMBEDDING_BASE_URL: str | None = None
+
+    # Optional LogMind token cost estimate. Keep prices configurable because
+    # provider pricing changes over time and OpenAI-compatible gateways vary.
+    LOGMIND_INPUT_TOKEN_PRICE_PER_1M_USD: float = 0.0
+    LOGMIND_OUTPUT_TOKEN_PRICE_PER_1M_USD: float = 0.0
+
     OPENWEATHERMAP_API_KEY: SecretStr | None = None
 
     # MCP Configuration

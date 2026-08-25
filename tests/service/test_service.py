@@ -7,7 +7,19 @@ from langchain_core.messages import AIMessage, AIMessageChunk, HumanMessage
 from langgraph.types import Interrupt, StateSnapshot
 
 from agents.agents import Agent
-from schema import ChatHistory, ChatMessage, ServiceMetadata
+from core.chat_store import upsert_chat_thread
+from core.diagnosis_store import save_diagnosis_record
+from schema import (
+    AgentTraceStep,
+    ChatHistory,
+    ChatMessage,
+    DiagnosisQualityEvaluation,
+    FaultType,
+    KnowledgeRef,
+    ServiceMetadata,
+    Severity,
+    SimilarIncidentRef,
+)
 from schema.models import OpenAIModelName
 
 
@@ -263,9 +275,491 @@ def test_history_custom_agent(test_client) -> None:
 
         output = ChatHistory.model_validate(response.json())
         assert output.messages[0].type == "human"
-        assert output.messages[0].content == QUESTION
-        assert output.messages[1].type == "ai"
-        assert output.messages[1].content == ANSWER
+    assert output.messages[0].content == QUESTION
+    assert output.messages[1].type == "ai"
+    assert output.messages[1].content == ANSWER
+
+
+@pytest.mark.asyncio
+async def test_chat_threads_returns_recent_threads(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "chat.db"
+    monkeypatch.setattr("core.chat_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    await upsert_chat_thread(
+        thread_id="thread-a",
+        user_id="user-a",
+        agent_id="logmind",
+        message="端口冲突诊断",
+    )
+    await upsert_chat_thread(
+        thread_id="thread-b",
+        user_id="user-b",
+        agent_id="logmind",
+        message="其他用户对话",
+    )
+    await upsert_chat_thread(
+        thread_id="thread-c",
+        user_id="user-a",
+        agent_id="chatbot",
+        message="其他 Agent 对话",
+    )
+
+    response = test_client.get(
+        "/chat/threads",
+        params={"user_id": "user-a", "agent_id": "logmind"},
+    )
+
+    assert response.status_code == 200
+    records = response.json()
+    assert len(records) == 1
+    assert records[0]["thread_id"] == "thread-a"
+    assert records[0]["title"] == "端口冲突诊断"
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_history_returns_knowledge_refs(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+    knowledge_ref = KnowledgeRef(
+        title="Port conflict guide",
+        source="docs/knowledge/port_conflict.md",
+        snippet="Find and stop the process that is already listening on the port.",
+    )
+
+    record_id = await save_diagnosis_record(
+        input_summary="Web server failed to start. Port 8080 was already in use.",
+        report_markdown="## Diagnosis\nPort 8080 is already occupied.",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.MEDIUM,
+        thread_id="thread-knowledge",
+        user_id="user-knowledge",
+        model="openai-compatible",
+        knowledge_refs=[knowledge_ref],
+        affected_component="Spring Boot Web Server",
+        key_evidence=["Port 8080 was already in use."],
+        possible_causes=["Another process is listening on 8080."],
+        troubleshooting_steps=["Run netstat to find the process."],
+        fix_suggestions=["Stop the process or change server.port."],
+        prevention_suggestions=["Reserve ports for local services."],
+        confidence=0.8,
+    )
+
+    response = test_client.get("/diagnosis/history", params={"limit": 5})
+
+    assert response.status_code == 200
+    records = response.json()
+    assert records[0]["id"] == record_id
+    assert records[0]["knowledge_refs"] == [knowledge_ref.model_dump(mode="json")]
+    assert records[0]["affected_component"] == "Spring Boot Web Server"
+    assert records[0]["key_evidence"] == ["Port 8080 was already in use."]
+    assert records[0]["possible_causes"] == ["Another process is listening on 8080."]
+    assert records[0]["troubleshooting_steps"] == ["Run netstat to find the process."]
+    assert records[0]["fix_suggestions"] == ["Stop the process or change server.port."]
+    assert records[0]["prevention_suggestions"] == ["Reserve ports for local services."]
+    assert records[0]["confidence"] == 0.8
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_history_filters_by_thread_and_user(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    matching_id = await save_diagnosis_record(
+        input_summary="matching diagnosis",
+        report_markdown="matching report",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.MEDIUM,
+        thread_id="thread-a",
+        user_id="user-a",
+    )
+    await save_diagnosis_record(
+        input_summary="same thread different user",
+        report_markdown="other report",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.MEDIUM,
+        thread_id="thread-a",
+        user_id="user-b",
+    )
+    await save_diagnosis_record(
+        input_summary="same user different thread",
+        report_markdown="other report",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.MEDIUM,
+        thread_id="thread-b",
+        user_id="user-a",
+    )
+
+    response = test_client.get(
+        "/diagnosis/history",
+        params={"thread_id": "thread-a", "user_id": "user-a"},
+    )
+
+    assert response.status_code == 200
+    records = response.json()
+    assert [record["id"] for record in records] == [matching_id]
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_stats_returns_aggregates(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    await save_diagnosis_record(
+        input_summary="port diagnosis",
+        report_markdown="port report",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.MEDIUM,
+        thread_id="thread-a",
+        user_id="user-a",
+    )
+    await save_diagnosis_record(
+        input_summary="second port diagnosis",
+        report_markdown="second port report",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.HIGH,
+        thread_id="thread-a",
+        user_id="user-a",
+    )
+    await save_diagnosis_record(
+        input_summary="redis diagnosis",
+        report_markdown="redis report",
+        fault_type=FaultType.REDIS_CONNECTION,
+        severity=Severity.HIGH,
+        thread_id="thread-b",
+        user_id="user-b",
+    )
+
+    response = test_client.get("/diagnosis/stats", params={"days": 7})
+
+    assert response.status_code == 200
+    stats = response.json()
+    assert stats["total"] == 3
+    assert stats["by_fault_type"] == {
+        "port_conflict": 2,
+        "redis_connection": 1,
+    }
+    assert stats["by_severity"] == {
+        "high": 2,
+        "medium": 1,
+    }
+    assert sum(day["count"] for day in stats["daily_counts"]) == 3
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_stats_filters_by_thread_and_user(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    await save_diagnosis_record(
+        input_summary="matching diagnosis",
+        report_markdown="matching report",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.MEDIUM,
+        thread_id="thread-a",
+        user_id="user-a",
+    )
+    await save_diagnosis_record(
+        input_summary="same thread different user",
+        report_markdown="other report",
+        fault_type=FaultType.REDIS_CONNECTION,
+        severity=Severity.HIGH,
+        thread_id="thread-a",
+        user_id="user-b",
+    )
+    await save_diagnosis_record(
+        input_summary="same user different thread",
+        report_markdown="other report",
+        fault_type=FaultType.CONFIGURATION_ERROR,
+        severity=Severity.LOW,
+        thread_id="thread-b",
+        user_id="user-a",
+    )
+
+    response = test_client.get(
+        "/diagnosis/stats",
+        params={"days": 7, "thread_id": "thread-a", "user_id": "user-a"},
+    )
+
+    assert response.status_code == 200
+    stats = response.json()
+    assert stats["total"] == 1
+    assert stats["by_fault_type"] == {"port_conflict": 1}
+    assert stats["by_severity"] == {"medium": 1}
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_observability_returns_agent_run_summary(
+    test_client,
+    monkeypatch,
+    tmp_path,
+) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    await save_diagnosis_record(
+        input_summary="port diagnosis",
+        report_markdown="port report",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.MEDIUM,
+        thread_id="thread-a",
+        user_id="user-a",
+        knowledge_refs=[
+            KnowledgeRef(
+                title="端口冲突排查手册",
+                source="docs/knowledge/port_conflict.md",
+                snippet="确认端口占用。",
+            )
+        ],
+        similar_incidents=[
+            SimilarIncidentRef(
+                record_id="history-1",
+                fault_type=FaultType.PORT_CONFLICT,
+                severity=Severity.MEDIUM,
+                summary="历史端口冲突",
+                created_at="2026-07-31T00:00:00+00:00",
+            )
+        ],
+        quality_evaluation=DiagnosisQualityEvaluation(
+            quality_score=91,
+            quality_breakdown={"sections": 20},
+            reference_accuracy_passed=True,
+        ),
+        agent_trace=[
+            AgentTraceStep(step="intent_detection", title="诊断请求识别"),
+            AgentTraceStep(
+                step="report_generation",
+                title="诊断报告生成",
+                metadata={
+                    "model_latency_ms": 900.0,
+                    "input_tokens": 800,
+                    "output_tokens": 400,
+                    "total_tokens": 1200,
+                    "estimated_cost_usd": 0.0008,
+                },
+            ),
+            AgentTraceStep(step="knowledge_retrieval", title="知识库检索"),
+            AgentTraceStep(
+                step="diagnosis_record_save",
+                title="诊断记录保存",
+                metadata={"runtime_ms": 1300.0},
+            ),
+        ],
+    )
+    await save_diagnosis_record(
+        input_summary="redis diagnosis",
+        report_markdown="redis report",
+        fault_type=FaultType.REDIS_CONNECTION,
+        severity=Severity.HIGH,
+        thread_id="thread-b",
+        user_id="user-b",
+        quality_evaluation=DiagnosisQualityEvaluation(
+            quality_score=70,
+            quality_breakdown={"sections": 10},
+            reference_accuracy_passed=False,
+            unsupported_knowledge_titles=["不存在的手册"],
+        ),
+        agent_trace=[
+            AgentTraceStep(step="intent_detection", title="诊断请求识别"),
+            AgentTraceStep(
+                step="knowledge_retrieval",
+                title="知识库检索",
+                status="failed",
+                detail="知识库连接失败，已降级为纯日志诊断。",
+            ),
+        ],
+    )
+
+    response = test_client.get(
+        "/diagnosis/observability",
+        params={"user_id": "user-a", "thread_id": "thread-a", "fault_type": "port_conflict"},
+    )
+
+    assert response.status_code == 200
+    summary = response.json()
+    assert summary["total_records"] == 1
+    assert summary["records_with_trace"] == 1
+    assert summary["trace_coverage_rate"] == 1.0
+    assert summary["knowledge_hit_rate"] == 1.0
+    assert summary["similar_incident_hit_rate"] == 1.0
+    assert summary["quality_evaluated_records"] == 1
+    assert summary["average_quality_score"] == 91.0
+    assert summary["average_runtime_ms"] == 1300.0
+    assert summary["p95_runtime_ms"] == 1300.0
+    assert summary["average_model_latency_ms"] == 900.0
+    assert summary["p95_model_latency_ms"] == 900.0
+    assert summary["token_usage_records"] == 1
+    assert summary["total_input_tokens"] == 800
+    assert summary["total_output_tokens"] == 400
+    assert summary["total_tokens"] == 1200
+    assert summary["average_total_tokens"] == 1200.0
+    assert summary["total_estimated_cost_usd"] == 0.0008
+    assert summary["average_estimated_cost_usd"] == 0.0008
+    assert summary["low_quality_records"] == 0
+    assert summary["reference_accuracy_failed_records"] == 0
+    assert summary["failed_trace_steps"] == 0
+    step_stats = {step["step"]: step for step in summary["step_stats"]}
+    assert step_stats["intent_detection"]["success"] == 1
+    assert step_stats["report_generation"]["success"] == 1
+    assert step_stats["diagnosis_record_save"]["success"] == 1
+
+
+def test_diagnosis_log_file_preview_returns_diagnostic_message(test_client) -> None:
+    response = test_client.post(
+        "/diagnosis/log-file/preview",
+        files={
+            "file": (
+                "app.log",
+                b"ERROR password=abc123 token=secret port 8080 failed",
+                "text/plain",
+            )
+        },
+    )
+
+    assert response.status_code == 200
+    preview = response.json()
+    assert preview["filename"] == "app.log"
+    assert preview["truncated"] is False
+    assert "abc123" not in preview["content"]
+    assert "secret" not in preview["content"]
+    assert "[REDACTED_PASSWORD]" in preview["content"]
+    assert "[REDACTED_TOKEN]" in preview["content"]
+    assert "文件名：app.log" in preview["diagnostic_message"]
+    assert "日志内容：" in preview["diagnostic_message"]
+
+
+def test_diagnosis_log_file_preview_rejects_unsupported_file(test_client) -> None:
+    response = test_client.post(
+        "/diagnosis/log-file/preview",
+        files={"file": ("app.json", b'{"error": "failed"}', "application/json")},
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Only .log and .txt files are supported"}
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_history_detail_returns_record(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    record_id = await save_diagnosis_record(
+        input_summary="detail diagnosis",
+        report_markdown="detail report",
+        fault_type=FaultType.CONFIGURATION_ERROR,
+        severity=Severity.HIGH,
+        thread_id="thread-detail",
+        user_id="user-detail",
+    )
+
+    response = test_client.get(f"/diagnosis/history/{record_id}")
+
+    assert response.status_code == 200
+    record = response.json()
+    assert record["id"] == record_id
+    assert record["thread_id"] == "thread-detail"
+    assert record["user_id"] == "user-detail"
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_history_detail_rejects_other_user(
+    test_client, monkeypatch, tmp_path
+) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    record_id = await save_diagnosis_record(
+        input_summary="detail diagnosis",
+        report_markdown="detail report",
+        fault_type=FaultType.CONFIGURATION_ERROR,
+        severity=Severity.HIGH,
+        thread_id="thread-detail",
+        user_id="owner-user",
+    )
+
+    response = test_client.get(
+        f"/diagnosis/history/{record_id}",
+        params={"user_id": "other-user"},
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Diagnosis not found"}
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_history_export_returns_markdown(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    record_id = await save_diagnosis_record(
+        input_summary="export diagnosis",
+        report_markdown="## 1. 问题概述\n端口冲突导致启动失败。",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.HIGH,
+        thread_id="thread-export",
+        user_id="user-export",
+        affected_component="Spring Boot Web Server",
+        key_evidence=["Port 8080 was already in use."],
+        fix_suggestions=["Stop the process or change server.port."],
+    )
+
+    response = test_client.get(f"/diagnosis/history/{record_id}/export")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/markdown")
+    assert (
+        response.headers["content-disposition"]
+        == f'attachment; filename="logmind-diagnosis-{record_id}.md"'
+    )
+    assert "# LogMind 诊断报告" in response.text
+    assert f"- 记录 ID：{record_id}" in response.text
+    assert "- 故障类型：port_conflict" in response.text
+    assert "Port 8080 was already in use." in response.text
+    assert "端口冲突导致启动失败。" in response.text
+
+
+@pytest.mark.asyncio
+async def test_diagnosis_history_export_rejects_other_user(
+    test_client, monkeypatch, tmp_path
+) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    record_id = await save_diagnosis_record(
+        input_summary="export diagnosis",
+        report_markdown="## 1. 问题概述\n端口冲突导致启动失败。",
+        fault_type=FaultType.PORT_CONFLICT,
+        severity=Severity.HIGH,
+        thread_id="thread-export",
+        user_id="owner-user",
+    )
+
+    response = test_client.get(
+        f"/diagnosis/history/{record_id}/export",
+        params={"user_id": "other-user"},
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Diagnosis not found"}
+
+
+def test_diagnosis_history_detail_returns_404(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    response = test_client.get("/diagnosis/history/missing-record")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Diagnosis not found"}
+
+
+def test_diagnosis_history_export_returns_404(test_client, monkeypatch, tmp_path) -> None:
+    db_path = tmp_path / "diagnosis.db"
+    monkeypatch.setattr("core.diagnosis_store.settings.SQLITE_DB_PATH", str(db_path))
+
+    response = test_client.get("/diagnosis/history/missing-record/export")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Diagnosis not found"}
 
 
 @pytest.mark.asyncio
@@ -423,7 +917,7 @@ def test_info(test_client, mock_settings) -> None:
         assert response.status_code == 200
         output = ServiceMetadata.model_validate(response.json())
 
-    assert output.default_agent == "research-assistant"
+    assert output.default_agent == "logmind"
     assert len(output.agents) == 1
     assert output.agents[0].key == "base-agent"
     assert output.agents[0].description == "A base agent."

@@ -1,0 +1,858 @@
+[
+  {
+    "id": "port_conflict_spring_boot_8080",
+    "name": "Spring Boot 8080 端口冲突",
+    "input_text": "APPLICATION FAILED TO START. Web server failed to start. Port 8080 was already in use.",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Port 8080",
+      "already in use"
+    ]
+  },
+  {
+    "id": "port_conflict_tomcat_bind_exception",
+    "name": "Tomcat BindException 端口占用",
+    "input_text": "Tomcat failed to start. java.net.BindException: Address already in use: bind. 服务启动失败。",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Address already in use",
+      "BindException"
+    ]
+  },
+  {
+    "id": "port_conflict_local_service",
+    "name": "本地服务端口占用",
+    "input_text": "服务启动失败，端口被占用。请分析日志：Address already in use while binding server socket.",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "端口被占用",
+      "Address already in use"
+    ]
+  },
+  {
+    "id": "port_conflict_dev_server",
+    "name": "开发服务端口冲突",
+    "input_text": "ERROR failed to start dev server: port already in use, listen tcp 0.0.0.0:3000.",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "port already in use",
+      "3000"
+    ]
+  },
+  {
+    "id": "port_conflict_nginx_bind",
+    "name": "Nginx 绑定端口失败",
+    "input_text": "nginx failed: bind() to 0.0.0.0:80 failed (98: Address already in use).",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Address already in use",
+      "0.0.0.0:80"
+    ]
+  },
+  {
+    "id": "port_conflict_chinese_8081",
+    "name": "中文端口占用日志",
+    "input_text": "服务无法启动，端口占用，监听 8081 失败。请帮忙定位问题。",
+    "expected_fault_type": "port_conflict",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "端口占用",
+      "8081"
+    ]
+  },
+  {
+    "id": "connection_mysql_communications_link",
+    "name": "MySQL Communications link failure",
+    "input_text": "java.sql.SQLNonTransientConnectionException: Communications link failure. Could not connect to database mysql:3306.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Communications link failure",
+      "database"
+    ]
+  },
+  {
+    "id": "connection_mysql_access_denied",
+    "name": "MySQL 账号权限连接失败",
+    "input_text": "java.sql.SQLException: Access denied for user 'app_user'@'[REDACTED_IP]'. Database connection failed.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Access denied for user",
+      "Database connection"
+    ]
+  },
+  {
+    "id": "connection_redis_refused",
+    "name": "Redis 连接被拒绝",
+    "input_text": "Redis connection refused at redis-cache:6379. Application failed to connect during startup.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Redis connection",
+      "refused"
+    ]
+  },
+  {
+    "id": "connection_jedis_exception",
+    "name": "Jedis 连接异常",
+    "input_text": "redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "JedisConnectionException",
+      "resource"
+    ]
+  },
+  {
+    "id": "connection_lettuce_timeout",
+    "name": "Lettuce Redis 超时",
+    "input_text": "io.lettuce.core.RedisCommandTimeoutException: Redis timeout while connecting to cache node.",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Redis timeout",
+      "cache"
+    ]
+  },
+  {
+    "id": "connection_database_chinese",
+    "name": "中文数据库连接失败",
+    "input_text": "应用启动后无法连接数据库，数据库连接失败，请分析这段日志。",
+    "expected_fault_type": "connection_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "无法连接数据库",
+      "数据库连接失败"
+    ]
+  },
+  {
+    "id": "gateway_nginx_504",
+    "name": "Nginx 504 网关超时",
+    "input_text": "nginx error: upstream timed out while reading response header from upstream, 504 gateway timeout.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "upstream timed out",
+      "504 gateway timeout"
+    ]
+  },
+  {
+    "id": "gateway_502_bad_gateway",
+    "name": "502 Bad Gateway",
+    "input_text": "502 Bad Gateway returned by nginx when forwarding request to upstream order-service.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "502 Bad Gateway",
+      "upstream"
+    ]
+  },
+  {
+    "id": "gateway_connect_failed",
+    "name": "网关连接上游失败",
+    "input_text": "nginx connect() failed (111: refused) while connecting to upstream, client request failed.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "connect() failed",
+      "upstream"
+    ]
+  },
+  {
+    "id": "gateway_nginx_502_chinese",
+    "name": "中文 Nginx 502",
+    "input_text": "nginx 502 网关超时，用户请求失败，请分析日志并定位原因。",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "nginx 502",
+      "网关超时"
+    ]
+  },
+  {
+    "id": "gateway_upstream_header_timeout",
+    "name": "上游响应头超时",
+    "input_text": "upstream timed out while reading response header from upstream, request: GET /api/orders failed.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "upstream timed out",
+      "response header"
+    ]
+  },
+  {
+    "id": "gateway_payment_504",
+    "name": "支付服务 504",
+    "input_text": "Gateway timeout: 504 gateway timeout from payment-service after 60s.",
+    "expected_fault_type": "gateway_5xx",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "504 gateway timeout",
+      "payment-service"
+    ]
+  },
+  {
+    "id": "timeout_request_timeout",
+    "name": "请求超时",
+    "input_text": "Request timeout after 30000ms when calling inventory service. 调用服务失败。",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Request timeout",
+      "30000ms"
+    ]
+  },
+  {
+    "id": "timeout_read_timed_out",
+    "name": "读取超时",
+    "input_text": "java.net.SocketTimeoutException: Read timed out. HTTP client failed while reading response.",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Read timed out",
+      "SocketTimeoutException"
+    ]
+  },
+  {
+    "id": "timeout_connect_timed_out",
+    "name": "连接超时",
+    "input_text": "Connect timed out when connecting to remote config service. Application startup failed.",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Connect timed out",
+      "config service"
+    ]
+  },
+  {
+    "id": "timeout_connection_timed_out",
+    "name": "连接等待超时",
+    "input_text": "Connection timed out while sending request to report service, retry exhausted.",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Connection timed out",
+      "retry"
+    ]
+  },
+  {
+    "id": "timeout_io_timeout",
+    "name": "I/O 超时",
+    "input_text": "i/o timeout during request to object storage. Upload task failed.",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "i/o timeout",
+      "Upload task"
+    ]
+  },
+  {
+    "id": "timeout_chinese_request",
+    "name": "中文请求超时",
+    "input_text": "订单服务连接超时，请求超时，接口调用失败，帮我分析日志。",
+    "expected_fault_type": "timeout",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "连接超时",
+      "请求超时"
+    ]
+  },
+  {
+    "id": "resource_jvm_heap_oom",
+    "name": "JVM 堆内存耗尽",
+    "input_text": "Exception in thread main java.lang.OutOfMemoryError: Java heap space. GC overhead limit exceeded.",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "OutOfMemoryError",
+      "Java heap space"
+    ]
+  },
+  {
+    "id": "resource_gc_overhead",
+    "name": "GC overhead 超限",
+    "input_text": "java.lang.OutOfMemoryError: GC overhead limit exceeded while processing batch job.",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "GC overhead limit exceeded",
+      "batch job"
+    ]
+  },
+  {
+    "id": "resource_metaspace",
+    "name": "Metaspace 内存不足",
+    "input_text": "Application error: java.lang.OutOfMemoryError: Metaspace after hot deployment.",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "OutOfMemoryError",
+      "Metaspace"
+    ]
+  },
+  {
+    "id": "resource_oom_killed",
+    "name": "容器 OOM",
+    "input_text": "Pod container terminated with OOMKilled. oom event detected in service logs.",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "OOMKilled",
+      "oom"
+    ]
+  },
+  {
+    "id": "resource_chinese_oom",
+    "name": "中文内存溢出",
+    "input_text": "服务运行一段时间后内存溢出，接口开始失败，请分析这段异常日志。",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "内存溢出",
+      "失败"
+    ]
+  },
+  {
+    "id": "resource_worker_oom",
+    "name": "Worker OOM",
+    "input_text": "worker process failed with OOM during image generation task, memory usage reached limit.",
+    "expected_fault_type": "resource_exhaustion",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "OOM",
+      "memory usage"
+    ]
+  },
+  {
+    "id": "config_placeholder_missing",
+    "name": "配置占位符缺失",
+    "input_text": "Spring Boot startup failed: Could not resolve placeholder 'redis.host' in value '${redis.host}'.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Could not resolve placeholder",
+      "redis.host"
+    ]
+  },
+  {
+    "id": "config_bind_properties_failed",
+    "name": "配置绑定失败",
+    "input_text": "Failed to bind properties under 'spring.datasource' to javax.sql.DataSource. Application failed to start.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Failed to bind properties",
+      "spring.datasource"
+    ]
+  },
+  {
+    "id": "config_property_invalid",
+    "name": "配置项非法",
+    "input_text": "Configuration property 'server.port' has invalid value 'abc'. Startup failed.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Configuration property",
+      "server.port"
+    ]
+  },
+  {
+    "id": "config_null_pointer",
+    "name": "空指针配置异常",
+    "input_text": "java.lang.NullPointerException: Cannot invoke \"String.trim()\" because config value is null.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "NullPointerException",
+      "Cannot invoke"
+    ]
+  },
+  {
+    "id": "config_chinese_file",
+    "name": "中文配置错误",
+    "input_text": "配置文件读取失败，配置错误导致服务启动失败，请帮忙定位问题。",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "配置文件",
+      "配置错误"
+    ]
+  },
+  {
+    "id": "config_missing_env",
+    "name": "环境变量缺失",
+    "input_text": "Application failed: Could not resolve placeholder 'OPENAI_API_KEY' in configuration property.",
+    "expected_fault_type": "configuration_error",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Could not resolve placeholder",
+      "OPENAI_API_KEY"
+    ]
+  },
+  {
+    "id": "permission_file_write_denied",
+    "name": "文件写入权限不足",
+    "input_text": "Permission denied: access is denied when writing /var/log/app.log. 服务写日志失败。",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Permission denied",
+      "access is denied"
+    ]
+  },
+  {
+    "id": "permission_unauthorized_api",
+    "name": "接口未授权",
+    "input_text": "HTTP 401 unauthorized when calling user profile API. Request failed.",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "unauthorized",
+      "401"
+    ]
+  },
+  {
+    "id": "permission_forbidden_api",
+    "name": "接口禁止访问",
+    "input_text": "HTTP 403 forbidden: access is denied for current role while requesting /admin/users.",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "forbidden",
+      "access is denied"
+    ]
+  },
+  {
+    "id": "permission_linux_exec",
+    "name": "Linux 执行权限不足",
+    "input_text": "bash: ./deploy.sh: Permission denied. Deploy task failed.",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Permission denied",
+      "deploy.sh"
+    ]
+  },
+  {
+    "id": "permission_chinese_denied",
+    "name": "中文权限不足",
+    "input_text": "接口调用失败，权限不足，用户访问报错拒绝访问。",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "权限不足",
+      "拒绝访问"
+    ]
+  },
+  {
+    "id": "permission_token_invalid",
+    "name": "Token 无效",
+    "input_text": "Request failed: invalid token, unauthorized access to protected resource.",
+    "expected_fault_type": "permission_and_auth",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "unauthorized",
+      "token"
+    ]
+  },
+  {
+    "id": "k8s_crashloopbackoff",
+    "name": "Kubernetes Pod 循环重启",
+    "input_text": "Kubernetes pod payment-api is CrashLoopBackOff. Back-off restarting failed container.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "CrashLoopBackOff",
+      "pod"
+    ]
+  },
+  {
+    "id": "k8s_imagepullbackoff",
+    "name": "镜像拉取失败",
+    "input_text": "Kubernetes pod order-api is ImagePullBackOff. Failed to pull image from registry.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "ImagePullBackOff",
+      "Failed to pull image"
+    ]
+  },
+  {
+    "id": "k8s_backoff_restarting",
+    "name": "容器反复重启",
+    "input_text": "Back-off restarting failed container in pod inventory-worker. Pod failed repeatedly.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Back-off restarting failed container",
+      "Pod failed"
+    ]
+  },
+  {
+    "id": "k8s_pod_failed",
+    "name": "Pod 启动失败",
+    "input_text": "pod failed during startup, kubernetes event shows container readiness probe failed.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "pod failed",
+      "readiness probe"
+    ]
+  },
+  {
+    "id": "k8s_chinese_crash",
+    "name": "中文 Pod 循环重启",
+    "input_text": "k8s pod 循环重启，pod 启动失败，服务无法对外提供接口。",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "pod 循环重启",
+      "pod 启动失败"
+    ]
+  },
+  {
+    "id": "k8s_container_probe",
+    "name": "探针失败导致 Pod 异常",
+    "input_text": "Kubernetes pod failed because liveness probe failed. Back-off restarting failed container.",
+    "expected_fault_type": "kubernetes_pod_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "pod failed",
+      "Back-off restarting failed container"
+    ]
+  },
+  {
+    "id": "container_docker_exited",
+    "name": "Docker 容器启动失败",
+    "input_text": "Docker container exited with code 1 during startup. Application failed to start.",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "container exited",
+      "failed to start"
+    ]
+  },
+  {
+    "id": "container_docker_entrypoint",
+    "name": "Docker Entrypoint 失败",
+    "input_text": "docker entrypoint failed, container exited immediately after running start.sh.",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "docker",
+      "container exited"
+    ]
+  },
+  {
+    "id": "container_exit_code_137",
+    "name": "容器 137 退出",
+    "input_text": "container exited with code 137. docker service startup failed.",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "container exited",
+      "137"
+    ]
+  },
+  {
+    "id": "container_startup_chinese",
+    "name": "中文容器启动失败",
+    "input_text": "容器启动失败，docker 日志显示 application failed to start。",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "容器启动失败",
+      "docker"
+    ]
+  },
+  {
+    "id": "container_missing_command",
+    "name": "Docker 启动命令缺失",
+    "input_text": "docker run failed: container exited because startup command was not found.",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "docker",
+      "container exited"
+    ]
+  },
+  {
+    "id": "container_env_start_fail",
+    "name": "容器环境启动失败",
+    "input_text": "docker service failed during startup, container exited before listening on health port.",
+    "expected_fault_type": "container_startup_failure",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "docker",
+      "container exited"
+    ]
+  },
+  {
+    "id": "database_slow_query_orders",
+    "name": "订单慢查询",
+    "input_text": "MySQL slow query detected: SELECT * FROM orders took 18.5s, rows_examined=2500000.",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "slow query",
+      "took 18.5s"
+    ]
+  },
+  {
+    "id": "database_rows_examined_high",
+    "name": "扫描行数过高",
+    "input_text": "slow query log: rows_examined=9800000, query took 12.1s on table user_event.",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "rows_examined",
+      "query took"
+    ]
+  },
+  {
+    "id": "database_sql_syntax_error",
+    "name": "SQL 语法错误",
+    "input_text": "java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax near 'from order'.",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "SQLSyntaxErrorException",
+      "syntax"
+    ]
+  },
+  {
+    "id": "database_bad_sql_grammar",
+    "name": "Bad SQL Grammar",
+    "input_text": "Bad SQL grammar in SELECT statement. database request failed with syntax error.",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Bad SQL grammar",
+      "syntax error"
+    ]
+  },
+  {
+    "id": "database_duplicate_entry",
+    "name": "唯一键冲突",
+    "input_text": "SQL error: duplicate entry '1001' for key 'uk_order_no'. Insert failed.",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "duplicate entry",
+      "SQL error"
+    ]
+  },
+  {
+    "id": "database_slow_query_chinese",
+    "name": "中文慢查询",
+    "input_text": "数据库查询很慢，慢查询日志显示订单表查询耗时 20s，请帮忙排查。",
+    "expected_fault_type": "database_slow_query",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "查询很慢",
+      "慢查询"
+    ]
+  },
+  {
+    "id": "disk_no_space_data",
+    "name": "数据盘空间不足",
+    "input_text": "Write failed: No space left on device. Disk usage reached 100% on /data.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "No space left on device",
+      "Disk usage"
+    ]
+  },
+  {
+    "id": "disk_full_var_log",
+    "name": "日志盘写满",
+    "input_text": "disk full on /var/log. Application failed to write rolling log file.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "disk full",
+      "/var/log"
+    ]
+  },
+  {
+    "id": "disk_read_only_fs",
+    "name": "只读文件系统",
+    "input_text": "Read-only file system error while writing upload cache. Request failed.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "Read-only file system",
+      "upload cache"
+    ]
+  },
+  {
+    "id": "disk_chinese_full",
+    "name": "中文磁盘满",
+    "input_text": "磁盘空间不足，磁盘满导致服务写文件失败，请分析日志。",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "磁盘空间不足",
+      "磁盘满"
+    ]
+  },
+  {
+    "id": "disk_usage_alert",
+    "name": "磁盘使用率告警",
+    "input_text": "disk usage alert: /opt reached 99%, error writing temp file.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "disk usage",
+      "99%"
+    ]
+  },
+  {
+    "id": "disk_no_space_image_layers",
+    "name": "镜像层写入空间不足",
+    "input_text": "No space left on device when pulling image layers. Deploy failed.",
+    "expected_fault_type": "disk_and_filesystem",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "No space left on device",
+      "image layers"
+    ]
+  },
+  {
+    "id": "tls_dns_lookup_failed",
+    "name": "DNS 解析失败",
+    "input_text": "Service request failed: DNS lookup failed for api.example.com, TLS handshake timeout.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "DNS lookup failed",
+      "TLS handshake"
+    ]
+  },
+  {
+    "id": "tls_name_service_unknown",
+    "name": "域名无法解析",
+    "input_text": "java.net.UnknownHostException: name or service not known when resolving payment.internal.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "name or service not known",
+      "payment.internal"
+    ]
+  },
+  {
+    "id": "tls_certificate_verify_failed",
+    "name": "证书校验失败",
+    "input_text": "HTTPS request failed: certificate verify failed while connecting to auth service.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "certificate verify failed",
+      "auth service"
+    ]
+  },
+  {
+    "id": "tls_ssl_handshake",
+    "name": "SSL 握手失败",
+    "input_text": "SSL handshake failed, TLS handshake error from upstream service.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "SSL handshake",
+      "TLS handshake"
+    ]
+  },
+  {
+    "id": "tls_chinese_dns",
+    "name": "中文 DNS 失败",
+    "input_text": "dns 解析失败，证书校验失败，服务请求报错，请定位问题。",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "dns 解析失败",
+      "证书校验失败"
+    ]
+  },
+  {
+    "id": "tls_remote_handshake",
+    "name": "远端 TLS 握手失败",
+    "input_text": "remote error: tls handshake failure, service request failed during login callback.",
+    "expected_fault_type": "tls_dns_network",
+    "expected_diagnostic_request": true,
+    "required_input_evidence": [
+      "tls handshake",
+      "login callback"
+    ]
+  },
+  {
+    "id": "normal_chat_hello",
+    "name": "普通问候",
+    "input_text": "你好，介绍一下你能做什么。",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  },
+  {
+    "id": "normal_chat_python_plan",
+    "name": "Python 学习计划",
+    "input_text": "我想学习 Python，可以给我一个三周学习计划吗？",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  },
+  {
+    "id": "normal_chat_resume",
+    "name": "简历表达优化",
+    "input_text": "帮我优化一下项目经历的表达，让它更适合校招简历。",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  },
+  {
+    "id": "normal_chat_sql_question",
+    "name": "SQL 概念问题",
+    "input_text": "请解释一下数据库索引的最左前缀原则。",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  },
+  {
+    "id": "normal_chat_spring_concept",
+    "name": "Spring 概念问题",
+    "input_text": "Spring Boot 的自动配置原理是什么？",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  },
+  {
+    "id": "normal_chat_agent_concept",
+    "name": "Agent 概念问题",
+    "input_text": "什么是 AI Agent，和普通聊天机器人有什么区别？",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  },
+  {
+    "id": "normal_chat_markdown",
+    "name": "Markdown 帮助",
+    "input_text": "帮我把下面的项目介绍整理成 Markdown 列表。",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  },
+  {
+    "id": "normal_chat_interview",
+    "name": "面试准备",
+    "input_text": "请帮我准备 Java 后端面试中关于事务传播机制的回答。",
+    "expected_fault_type": "unknown",
+    "expected_diagnostic_request": false,
+    "required_input_evidence": []
+  }
+]
